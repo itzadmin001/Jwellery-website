@@ -5,7 +5,6 @@ function Footer() {
 
                 {/* Brand / About */}
                 <div>
-                    <h2 className="text-white text-xl font-bold mb-4">MyStore</h2>
                     <p className="md:text-sm text-xl leading-relaxed">
                         A modern e-commerce platform delivering high-quality fashion and jewelry.
                         We believe in elegance, style, and affordable luxury.
@@ -59,7 +58,7 @@ function Footer() {
                 © {new Date().getFullYear()} MyStore. All rights reserved.
             </div>
         </footer>
-    );
+    )
 }
 
 export default Footer;

@@ -12,7 +12,7 @@ function ProductCard({ image, title, price }) {
                 />
             </div>
 
-            <div className="text-center mt-4">
+            <div className="text-center mt-2">
 
                 <div className="flex justify-center items-center mb-1 text-yellow-500">
                     {[...Array(4)].map((_, i) => (
@@ -30,7 +30,7 @@ function ProductCard({ image, title, price }) {
                 <p className="text-lg font-semibold text-gray-900 mt-1">${price}</p>
 
                 {/* CTA Button */}
-                <button className="mt-3 cursor-pointer px-4 py-2 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors duration-300">
+                <button className="mt-2 cursor-pointer px-4 py-2 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors duration-300">
                     Add to Cart
                 </button>
             </div>
