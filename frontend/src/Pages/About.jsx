@@ -1,7 +1,7 @@
 import Container from "../Components/Container"
 import CustomerReview from "../Components/CustomerReview"
 import JwelleryShop from "../assets/Images/jewelry-shop.png"
-import ArtJwellery from "../assets/Images/Jewellery.png"
+import ArtJwellery from "../assets/Images/jewellery.png"
 import FinalTouch from "../assets/Images/jewelry.png"
 import BeautyfullArt from "../assets/Images/jewels.png"
 
