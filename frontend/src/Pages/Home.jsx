@@ -28,7 +28,7 @@ const Hero = () => {
             <Container classes="flex items-center justify-between">
 
                 <div className=" font-semibold w-2/3 p-2">
-                    <h3 className="text-gray-800 sm:text-xl text-xs uppercase">Emporia Dr </h3>
+                    <h3 className="text-gray-900 sm:text-xl text-xs uppercase">Emporia <span className=" text-yellow-500">Dr</span> </h3>
                     <h1 className="lg:text-6xl md:text-5xl sm:text-4xl text-xl font-serif tracking-tighter ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
                     <div className="mt-5 ">
                         <button className=" bg-yellow-400 hover:bg-yellow-500 duration-300 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</button>
