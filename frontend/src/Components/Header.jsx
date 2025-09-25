@@ -25,7 +25,7 @@ export default function Header() {
                 </div>
             </div>
             <div className="bg-white/80">
-                <Container classes="sm:px-6 py-6 flex items-center justify-center">
+                <Container classes="sm:px-6 sm:py-6 py-3 flex items-center justify-center">
                     <div className="w-2/4 flex justify-center items-center">
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-4">
