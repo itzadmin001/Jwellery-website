@@ -2,7 +2,7 @@ import { GiRoundStar } from "react-icons/gi";
 
 function ProductCard({ image, title, price }) {
     return (
-        <div className="  cursor-pointer shadow-md hover:shadow transition-shadow duration-300  w-full max-w-xs mx-auto">
+        <div className=" rounded-lg cursor-pointer shadow-md hover:shadow transition-shadow duration-300  w-full max-w-xs mx-auto">
             {/* Product Image */}
             <div className="relative flex justify-center bg-[#FDFDFD] py-4">
                 <img

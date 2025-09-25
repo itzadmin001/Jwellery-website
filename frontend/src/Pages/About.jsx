@@ -23,7 +23,7 @@ function About() {
     return (
         <section>
             <Container>
-                <div className="text-center mt-20">
+                <div className="text-center mt-30">
                     <div className="flex items-center justify-center gap-4">
                         <div className="h-0.5 w-16 bg-gray-200 rounded hidden sm:block" />
                         <div className="font-serif text-2xl md:text-3xl tracking-wider">

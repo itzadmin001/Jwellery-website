@@ -25,7 +25,7 @@ export default function Header() {
                     </div>
                 </div>
             </div>
-            <div className="bg-white/80">
+            <div className="hidden md:block bg-white/80">
                 <Container classes="sm:px-6 sm:py-6 py-3 flex items-center justify-center">
                     <div className="w-2/4 flex justify-center items-center">
                         <div className="text-center">
@@ -42,7 +42,7 @@ export default function Header() {
                 <Container classes="sm:px-6">
                     <div className="flex items-center  justify-between h-12">
                         <div className="md:hidden block uppercase font-semibold">
-                            <img src="" alt="" />
+                            <img src={LOGO} alt="" className="w-1/2 " />
                         </div>
                         <div className="hidden md:flex space-x-4 font-semibold">
                             {menus.map((item) => (

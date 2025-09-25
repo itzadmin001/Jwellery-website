@@ -23,6 +23,7 @@ function Home() {
             <Hero />
             <Category />
             <FeaturedCategory />
+            <CustomProduct />
             <About />
         </div>
     )
@@ -31,18 +32,17 @@ function Home() {
 
 const Hero = () => {
     return (
-        <section className="w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] flex items-center" style={{
+        <section className="w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] flex items-center overflow-hidden" style={{
             backgroundImage: `url(${BunnerImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center"
         }}>
             <Container classes="flex items-center">
                 <div className=" font-semibold w-2/3 px-4">
-                    {/* <h3 className="text-gray-200 sm:text-xl text-xs uppercase">Emporia <span className=" text-yellow-500">Dr</span> </h3> */}
                     <img src={LOGO} alt="" className="w-1/3" />
                     <h1 className="lg:text-6xl text-white md:text-5xl sm:text-4xl text-xl font-serif tracking-tighter ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
                     <div className="mt-5 ">
-                        <button className=" border-2 border-yellow-500 hover:bg-yellow-600 duration-300 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</button>
+                        <button className=" bg-yellow-500 hover:bg-yellow-600 duration-300 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</button>
                     </div>
                 </div>
             </Container>
@@ -123,7 +123,7 @@ const Category = () => {
                 <div className=" bg-black grid md:grid-cols-3 overflow-hidden w-full ">
 
                     <img
-                        src="https://images.pexels.com/photos/1165615/pexels-photo-1165615.jpeg"
+                        src="https://images.pexels.com/photos/1395306/pexels-photo-1395306.jpeg "
                         alt="Exquisite Jewelry Collection"
                         className=" object-cover object-center w-full h-full"
                     />
@@ -245,6 +245,80 @@ const FeaturedCategory = () => {
         </section>
     )
 }
+
+
+
+const CustomProduct = () => {
+    const sections = [
+        {
+            id: "rings",
+            title: "Luxury Rings",
+            description:
+                "Handcrafted diamond & gold rings that sparkle with elegance. Perfect for engagements, anniversaries, or just to celebrate yourself.",
+            image:
+                "https://images.pexels.com/photos/3266703/pexels-photo-3266703.jpeg",
+        },
+        {
+            id: "necklaces",
+            title: "Designer Necklaces",
+            description:
+                "Discover our premium necklaces designed to elevate your beauty. From minimal gold chains to statement diamond pieces, we have it all.",
+            image:
+                "https://images.pexels.com/photos/6387623/pexels-photo-6387623.jpeg",
+        },
+        {
+            id: "bracelets",
+            title: "Premium Bangles",
+            description:
+                "Modern & traditional Bangles crafted with precision and passion. A perfect balance of culture and style.",
+            image:
+                "https://images.pexels.com/photos/29169323/pexels-photo-29169323.jpeg",
+        },
+    ];
+
+    return (
+        <section className="w-full relative font-sans py-12">
+            <h2 className="text-center text-3xl md:text-4xl font-bold mb-12">
+                Explore Our Jewelry Collections
+            </h2>
+
+            <div className="flex flex-col gap-20 w-[90%] md:w-[85%] lg:w-[75%] mx-auto">
+                {sections.map((item, index) => (
+                    <div
+                        key={item.id}
+                        className={`flex flex-col md:flex-row items-center gap-10 ${index % 2 === 1 ? "md:flex-row-reverse" : ""
+                            }`}
+                    >
+                        {/* Image Section */}
+                        <div className="w-full md:w-1/2 rounded-xl overflow-hidden shadow-lg">
+                            <img
+                                src={item.image}
+                                alt={`${item.title} jewelry`}
+                                className="w-full h-[350px] md:h-[400px] object-cover hover:scale-105 transition duration-500"
+                            />
+                        </div>
+
+                        {/* Content Section */}
+                        <div className="w-full md:w-1/2 text-center md:text-left">
+                            <h3 className="text-2xl md:text-3xl font-semibold mb-3">
+                                {item.title}
+                            </h3>
+                            <p className="text-gray-600 leading-relaxed mb-5">
+                                {item.description}
+                            </p>
+                            <button className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full shadow-md hover:scale-105 transition cursor-pointer">
+                                Shop {item.title}
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
+};
+
+
+
 
 
 

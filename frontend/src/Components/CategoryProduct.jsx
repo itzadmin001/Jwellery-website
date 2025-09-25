@@ -11,7 +11,7 @@ function CategoryProduct({ data }) {
             </div>
 
             {/* Category Name */}
-            <h1 className="font-medium text-center text-xs md:text-base mt-2 text-gray-800 group-hover:text-[#c09529] transition-colors duration-300">
+            <h1 className="font-medium text-center text-[10px] md:text-base mt-2 text-gray-800 group-hover:text-[#c09529] transition-colors duration-300">
                 {data.name}
             </h1>
         </div>
