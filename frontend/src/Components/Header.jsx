@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container"
 import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiX } from "react-icons/fi";
+import LOGO from "../../public/LOGO.png"
 
 const menus = [
     { name: "Home", to: "/" },
@@ -29,13 +30,10 @@ export default function Header() {
                     <div className="w-2/4 flex justify-center items-center">
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-4">
-                                <div className="h-0.5 w-16 bg-gray-200 rounded hidden sm:block" />
-                                <div className="font-serif text-2xl md:text-3xl tracking-wider">
-                                    <span className="text-gray-800">Jewellery</span>
+                                <div className="w-fit">
+                                    <img src={LOGO} alt="" className="md:w-1/2 mx-auto" />
                                 </div>
-                                <div className="h-0.5 w-16 bg-gray-200 rounded hidden sm:block" />
                             </div>
-                            <div className="text-xs text-gray-400 mt-1">Feel the difference</div>
                         </div>
                     </div>
                 </Container>
@@ -44,7 +42,7 @@ export default function Header() {
                 <Container classes="sm:px-6">
                     <div className="flex items-center  justify-between h-12">
                         <div className="md:hidden block uppercase font-semibold">
-                            <h1>Emporia <span className=" text-yellow-500">Dr </span></h1>
+                            <img src="" alt="" />
                         </div>
                         <div className="hidden md:flex space-x-4 font-semibold">
                             {menus.map((item) => (

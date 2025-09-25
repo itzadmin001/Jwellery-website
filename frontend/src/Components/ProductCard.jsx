@@ -2,9 +2,9 @@ import { GiRoundStar } from "react-icons/gi";
 
 function ProductCard({ image, title, price }) {
     return (
-        <div className="rounded-2xl bg-[#FDFDFD] cursor-pointer shadow-md hover:shadow transition-shadow duration-300 p-4 w-full max-w-xs mx-auto">
+        <div className="  cursor-pointer shadow-md hover:shadow transition-shadow duration-300  w-full max-w-xs mx-auto">
             {/* Product Image */}
-            <div className="relative flex justify-center">
+            <div className="relative flex justify-center bg-[#FDFDFD] py-4">
                 <img
                     src={image}
                     alt={title}
@@ -12,7 +12,7 @@ function ProductCard({ image, title, price }) {
                 />
             </div>
 
-            <div className="text-center mt-2">
+            <div className="text-center mt-2 py-2 px-4">
 
                 <div className="flex justify-center items-center mb-1 text-yellow-500">
                     {[...Array(4)].map((_, i) => (
@@ -30,7 +30,7 @@ function ProductCard({ image, title, price }) {
                 <p className="text-lg font-semibold text-gray-900 mt-1">${price}</p>
 
                 {/* CTA Button */}
-                <button className="mt-2 cursor-pointer px-4 py-2 bg-black text-white text-sm rounded-full hover:bg-gray-800 transition-colors duration-300">
+                <button className="mt-2 mb-2 cursor-pointer sm:px-4 px-2 sm:py-2 py-1 border-2 border-yellow-500 font-semibold  text-yellow-500 sm:text-sm text-xs rounded-sm hover:bg-yellow-600 hover:text-white transition-colors duration-300">
                     Add to Cart
                 </button>
             </div>

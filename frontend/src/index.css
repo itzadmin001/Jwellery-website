@@ -2,4 +2,9 @@
 
 body {
     user-select: none;
+
+}
+
+.scroll::-webkit-scrollbar {
+    display: none
 }

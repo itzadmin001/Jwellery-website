@@ -1,5 +1,4 @@
 import Container from "../Components/Container"
-import CustomerReview from "../Components/CustomerReview"
 import JwelleryShop from "../assets/Images/jewelry-shop.png"
 import ArtJwellery from "../assets/Images/jewellery.png"
 import FinalTouch from "../assets/Images/jewelry.png"
@@ -70,18 +69,7 @@ function About() {
 
                 </div>
 
-                <div className=" mt-20 bg-[#FDFDFD]">
-                    <div className="text-center mt-10">
-                        <div className="flex items-center justify-center gap-4 py-10">
-                            <div className="h-0.5 w-16 bg-gray-200 rounded hidden sm:block" />
-                            <div className="font-serif text-2xl md:text-3xl tracking-wider">
-                                <span className="text-gray-800 " >Customer Reviews</span>
-                            </div>
-                            <div className="h-0.5 w-16 bg-gray-200 rounded hidden sm:block" />
-                        </div>
-                    </div>
-                    <CustomerReview reviews={reviewsData} />
-                </div>
+
             </Container>
 
         </section>
