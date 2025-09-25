@@ -16,15 +16,15 @@ export default function Header() {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <header className="w-full">
-            <div className="w-full bg-gray-800 text-gray-200 text-xs">
+        <header className="w-full ">
+            <div className="w-full bg-[#484848] text-gray-200 text-xs">
                 <div className="mx-auto px-4 sm:px-6 flex items-center justify-center h-8">
                     <div className=" border-b">
                         <span>COD & FREE SHIPPING</span>
                     </div>
                 </div>
             </div>
-            <div className="bg-white">
+            <div className="bg-white/80">
                 <Container classes="sm:px-6 py-6 flex items-center justify-center">
                     <div className="w-2/4 flex justify-center items-center">
                         <div className="text-center">
@@ -40,10 +40,9 @@ export default function Header() {
                     </div>
                 </Container>
             </div>
-            <nav className="bg-white shadow">
-                <Container className="sm:px-6">
+            <nav className="bg-white shadow mb-2">
+                <Container classes="sm:px-6">
                     <div className="flex items-center  justify-between h-12">
-
                         <div className="md:hidden block uppercase font-semibold">
                             <h1>Emporia <span className=" text-yellow-500">Dr </span></h1>
                         </div>
@@ -52,14 +51,14 @@ export default function Header() {
                                 <Link
                                     key={item.name}
                                     to={item.to}
-                                    className="text-sm text-gray-600 duration-300 hover:text-yellow-500 transition"
+                                    className="text-sm text-gray-800 duration-300 hover:text-yellow-500 transition"
                                 >
                                     {item.name}
                                 </Link>
                             ))}
                         </div>
 
-                        <div className="w-1/4 flex justify-end items-center gap-4">
+                        <div className=" flex justify-end items-center gap-2">
                             <button className="hidden cursor-pointer md:inline-flex  duration-300 items-center p-2 rounded hover:bg-gray-100">
                                 <FiSearch size={18} />
                             </button>

@@ -1,5 +1,5 @@
 import Container from "../Components/Container"
-import BunnerImage from "../../public/Images/BG1.jpg"
+import BunnerImage from "../../public/Images/Bunner.jpg"
 import Product1 from "../../public/Images/Product1.png"
 import Product2 from "../../public/Images/Product2.png"
 import Product3 from "../../public/Images/_BG70137.jpg"
@@ -24,20 +24,24 @@ function Home() {
 
 const Hero = () => {
     return (
-        <section className="w-full bg-[#FDFDFD]">
-            <Container classes="flex items-center justify-between">
+        <section className="w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] flex items-center" style={{
+            backgroundImage: `url(${BunnerImage})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+        }}>
+            <Container classes="flex items-center">
 
-                <div className=" font-semibold w-2/3 p-2">
-                    <h3 className="text-gray-900 sm:text-xl text-xs uppercase">Emporia <span className=" text-yellow-500">Dr</span> </h3>
-                    <h1 className="lg:text-6xl md:text-5xl sm:text-4xl text-xl font-serif tracking-tighter ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
+                <div className=" font-semibold w-2/3 px-4">
+                    <h3 className="text-gray-200 sm:text-xl text-xs uppercase">Emporia <span className=" text-yellow-500">Dr</span> </h3>
+                    <h1 className="lg:text-6xl text-white md:text-5xl sm:text-4xl text-xl font-serif tracking-tighter ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
                     <div className="mt-5 ">
                         <button className=" bg-yellow-400 hover:bg-yellow-500 duration-300 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</button>
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center h-full w-1/2">
+                {/* <div className="flex items-center justify-center h-full w-1/2">
                     <img src={BunnerImage} alt="Banner" className="max-h-[80%] object-contain mt-10" />
-                </div>
+                </div> */}
             </Container>
         </section>
 
