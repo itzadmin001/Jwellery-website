@@ -17,7 +17,7 @@ export default function Header() {
 
     return (
         <header className="w-full ">
-            <div className="w-full bg-[#484848] text-gray-200 text-xs">
+            <div className="w-full bg-[#C19B50] text-gray-200 text-xs">
                 <div className="mx-auto px-4 sm:px-6 flex items-center justify-center h-8">
                     <div className=" border-b">
                         <span>COD & FREE SHIPPING</span>
