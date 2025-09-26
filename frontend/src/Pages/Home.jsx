@@ -40,11 +40,10 @@ const Hero = () => {
             backgroundSize: "cover",
             backgroundPosition: "center"
         }}>
-            <Container classes="flex items-center">
-                <div className=" font-semibold w-2/3 px-4">
-                    <img src={LOGO} alt="" className="w-1/3" />
-                    <h1 className="lg:text-6xl text-white md:text-5xl sm:text-4xl text-xl font-serif tracking-tighter ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
-                    <div className="mt-5 ">
+            <Container classes="flex items-center  ">
+                <div className=" font-semibold w-2/3 px-3 mt-5">
+                    <h1 className="lg:text-6xl sm:pr-20 text-white md:text-5xl sm:text-4xl text-xl font-serif tracking-tight ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
+                    <div className="mt-5">
                         <button className=" bg-yellow-500 hover:bg-yellow-600 duration-300 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</button>
                     </div>
                 </div>
@@ -322,6 +321,8 @@ const CustomProduct = () => {
 };
 
 
+
+
 const AboutUs = () => {
     const features = [
         {
@@ -370,16 +371,16 @@ const AboutUs = () => {
                 </div>
 
                 {/* Features Grid */}
-                <div className="grid md:grid-cols-2 gap-8 mb-20">
+                <div className="grid md:grid-cols-2 gap-8 mb-20 ">
                     {features.map((feature, index) => (
                         <div key={index} className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
                             <div className="sm:flex  items-start gap-6">
-                                <div className={`p-6 rounded-2xl bg-gradient-to-r ${feature.color} shadow-lg sm:group-hover:scale-105 transition-transform duration-300`}>
-                                    <img src={feature.icon} alt={feature.title} className="w-16 mx-auto h-16 object-cover" />
+                                <div className={`md:p-6 p-2 rounded-2xl bg-gradient-to-r ${feature.color} shadow-lg sm:group-hover:scale-105 transition-transform duration-300`}>
+                                    <img src={feature.icon} alt={feature.title} className="sm:w-16 mx-auto h-16 object-cover" />
                                 </div>
                                 <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors duration-300">
+                                    <div className="sm:flex items-center gap-3 mb-3">
+                                        <h3 className="sm:text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors duration-300">
                                             {feature.title}
                                         </h3>
                                         <span className="bg-yellow-100 text-yellow-800 sm:text-sm text-xs font-semibold text-center px-3 py-1 rounded-full">
@@ -474,5 +475,4 @@ const AboutUs = () => {
 
 
 
-
-export default Home
+export default Home 

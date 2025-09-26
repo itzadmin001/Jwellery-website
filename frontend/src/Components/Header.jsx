@@ -12,6 +12,7 @@ const menus = [
     { name: "Contact Us", to: "/contact" },
 ];
 
+
 export default function Header() {
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -62,9 +63,8 @@ export default function Header() {
                             <Link to="/wishlist" className="hidden md:inline-flex duration-300 items-center p-2 rounded hover:bg-gray-100">
                                 <FiHeart size={18} />
                             </Link>
-                            <Link to="/cart" className="inline-flex items-center duration-300 p-2 rounded hover:bg-gray-100">
+                            <Link to="/cart" className=" duration-300 p-2 rounded hover:bg-gray-100">
                                 <FiShoppingCart size={18} />
-                                <span className="ml-1 text-sm hidden sm:inline">0 items - $0.00</span>
                             </Link>
                             <Link to="/account" className="hidden md:inline-flex duration-300 items-center p-2 rounded hover:bg-gray-100">
                                 <FiUser size={18} />
@@ -80,25 +80,56 @@ export default function Header() {
                         </div>
                     </div>
 
-                    {/* Mobile nav  */}
+                    {/* Mobile Menu - Simple & Clean */}
                     {mobileOpen && (
-                        <div className="md:hidden py-4">
-                            <div className="flex flex-col space-y-2">
-                                {menus.map((item) => (
-                                    <Link
-                                        key={item.name}
-                                        to={item.to}
-                                        onClick={() => setMobileOpen(false)}
-                                        className="block px-3 py-2 rounded text-gray-700 hover:bg-gray-50"
-                                    >
-                                        {item.name}
-                                    </Link>
-                                ))}
+                        <div className="md:hidden bg-white border-t border-gray-200">
+                            {/* Navigation Menus */}
+                            <div className="px-4 py-3">
+                                <div className="space-y-1">
+                                    {menus.map((item) => (
+                                        <Link
+                                            key={item.name}
+                                            to={item.to}
+                                            onClick={() => setMobileOpen(false)}
+                                            className="block py-3 px-3 text-gray-700 hover:bg-[#C19B50] hover:text-white rounded-md transition-colors duration-200 font-medium"
+                                        >
+                                            {item.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
 
-                                <div className="flex items-center justify-center px-3 mt-2">
-                                    <Link to="/wishlist" className="px-3 py-2 rounded hover:bg-gray-50">Wishlist</Link>
-                                    <Link to="/cart" className="px-3 py-2 rounded hover:bg-gray-50">Cart</Link>
-                                    <Link to="/account" className="px-3 py-2 rounded hover:bg-gray-50">Login</Link>
+                            {/* Action Buttons */}
+                            <div className="px-4 py-3 ">
+                                <div className="flex flex-col space-y-2">
+                                    <Link
+                                        to="/account"
+                                        onClick={() => setMobileOpen(false)}
+                                        className="flex items-center justify-center py-3 px-4 bg-[#C19B50] text-white rounded-md font-semibold hover:bg-[#A0853F] transition-colors duration-200"
+                                    >
+                                        <FiUser className="mr-2" size={18} />
+                                        Login
+                                    </Link>
+
+                                    <div className="flex space-x-2">
+                                        <Link
+                                            to="/cart"
+                                            onClick={() => setMobileOpen(false)}
+                                            className="flex items-center justify-center flex-1 py-3 px-4 bg-white border-2 border-[#C19B50] text-[#C19B50] rounded-md font-semibold hover:bg-[#C19B50] hover:text-white transition-colors duration-200"
+                                        >
+                                            <FiShoppingCart className="mr-2" size={18} />
+                                            Cart
+                                        </Link>
+
+                                        <Link
+                                            to="/wishlist"
+                                            onClick={() => setMobileOpen(false)}
+                                            className="flex items-center justify-center flex-1 py-3 px-4 bg-white border-2 border-[#C19B50] text-[#C19B50] rounded-md font-semibold hover:bg-[#C19B50] hover:text-white transition-colors duration-200"
+                                        >
+                                            <FiHeart className="mr-2" size={18} />
+                                            Wishlist
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
