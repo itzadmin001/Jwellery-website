@@ -7,7 +7,7 @@ import LOGO from "../../public/LOGO.png"
 
 const menus = [
     { name: "Home", to: "/" },
-    { name: "Shop", to: "/shop" },
+    { name: "Shop", to: "/store" },
     { name: "About", to: "/about" },
     { name: "Contact Us", to: "/contact" },
 ];

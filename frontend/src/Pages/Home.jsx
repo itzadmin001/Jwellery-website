@@ -44,7 +44,7 @@ const Hero = () => {
                 <div className=" font-semibold w-2/3 px-3 mt-5">
                     <h1 className="lg:text-6xl sm:pr-20 text-white md:text-5xl sm:text-4xl text-xl font-serif tracking-tight ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
                     <div className="mt-5">
-                        <button className=" bg-yellow-500 hover:bg-yellow-600 duration-300 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</button>
+                        <Link to={"/store"} className=" bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</Link>
                     </div>
                 </div>
             </Container>
@@ -105,7 +105,6 @@ const Category = () => {
                         </div>
                     </div>
                     <div className=" flex items-center gap-8 justify-center mt-10 overflow-x-auto scroll">
-
                         {
                             Categories.map((item, i) => {
                                 return (
@@ -115,10 +114,6 @@ const Category = () => {
                             })
                         }
                     </div>
-
-
-
-
                 </div>
             </Container>
             <div className="mt-20 flex justify-center">
@@ -141,7 +136,7 @@ const Category = () => {
                             Personalize your favorite creations or explore our curated collections to make every moment unforgettable.
                         </p>
                         <Link
-                            to="/shop"
+                            to="/store"
                             className="w-fit border-2 border-white  text-white font-semibold px-6 py-3 rounded-md hover:bg-white hover:text-black transition duration-300"
                             title="Shop Our Exclusive Jewelry Collection"
                         >
@@ -309,9 +304,9 @@ const CustomProduct = () => {
                             <p className="text-gray-600 leading-relaxed mb-5">
                                 {item.description}
                             </p>
-                            <button className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-full shadow-md hover:scale-105 transition cursor-pointer">
+                            <Link to={"/store"} className="inline-block px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white rounded-full shadow-md hover:scale-105 transition cursor-pointer">
                                 Shop {item.title}
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 ))}
@@ -324,36 +319,7 @@ const CustomProduct = () => {
 
 
 const AboutUs = () => {
-    const features = [
-        {
-            icon: JwelleryShop,
-            title: "Flagship Store of Deen Dayal Rajkumar Jewellers",
-            description: "Our flagship store has been a recognized landmark in the city since 1952, serving as a beacon of heritage and contemporary elegance. Located in the heart of the city, we have been the trusted destination for generations of jewelry lovers.",
-            color: "from-blue-500 to-cyan-500",
-            stats: "Since 1952"
-        },
-        {
-            icon: ArtJwellery,
-            title: "400 Years of Meenakari Heritage",
-            description: "The exquisite art of Meenakari has been lovingly pursued by our family for four centuries, preserving this traditional craft while embracing modern elegance. Each piece reflects our deep heritage of craftsmanship and timeless beauty.",
-            color: "from-purple-500 to-pink-500",
-            stats: "400+ Years"
-        },
-        {
-            icon: BeautyfullArt,
-            title: "Uniquely Striking Designs",
-            description: "Our jewelry stands out with strangely beautiful designs and exquisite embellishments that make the beholder stand out. We create pieces that are not just accessories, but statements of individuality and elegance.",
-            color: "from-green-500 to-teal-500",
-            stats: "Unique Designs"
-        },
-        {
-            icon: FinalTouch,
-            title: "Meticulous Craftsmanship",
-            description: "Every creation receives meticulous finishing, polishing, and detailing, ensuring that the final piece is flawless and ready to make a statement. Our commitment to perfection is evident in every piece we create.",
-            color: "from-orange-500 to-red-500",
-            stats: "Perfect Finish"
-        }
-    ]
+
 
     return (
         <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
@@ -370,103 +336,41 @@ const AboutUs = () => {
                     </p>
                 </div>
 
-                {/* Features Grid */}
-                <div className="grid md:grid-cols-2 gap-8 mb-20 ">
-                    {features.map((feature, index) => (
-                        <div key={index} className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2">
-                            <div className="sm:flex  items-start gap-6">
-                                <div className={`md:p-6 p-2 rounded-2xl bg-gradient-to-r ${feature.color} shadow-lg sm:group-hover:scale-105 transition-transform duration-300`}>
-                                    <img src={feature.icon} alt={feature.title} className="sm:w-16 mx-auto h-16 object-cover" />
-                                </div>
-                                <div className="flex-1">
-                                    <div className="sm:flex items-center gap-3 mb-3">
-                                        <h3 className="sm:text-xl font-bold text-gray-900 group-hover:text-yellow-600 transition-colors duration-300">
-                                            {feature.title}
-                                        </h3>
-                                        <span className="bg-yellow-100 text-yellow-800 sm:text-sm text-xs font-semibold text-center px-3 py-1 rounded-full">
-                                            {feature.stats}
-                                        </span>
-                                    </div>
-                                    <p className="text-gray-600 leading-relaxed sm:text-sm text-xs">
-                                        {feature.description}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
 
-                {/* Company Stats */}
-                <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 rounded-3xl p-12 text-white mb-16">
-                    <div className="text-center mb-8">
-                        <h3 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-                            Our Legacy in Numbers
-                        </h3>
-                        <p className="text-xl text-gray-300">
-                            Four centuries of excellence, one family's commitment to perfection
-                        </p>
-                    </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        <div className="flex flex-col items-center">
-                            <div className="text-5xl font-bold text-yellow-500 mb-2">400+</div>
-                            <div className="text-gray-300 text-lg">Years of Heritage</div>
-                            <div className="text-sm text-gray-400">Meenakari Art Tradition</div>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="text-5xl font-bold text-yellow-500 mb-2">1952</div>
-                            <div className="text-gray-300 text-lg">Established</div>
-                            <div className="text-sm text-gray-400">Flagship Store</div>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="text-5xl font-bold text-yellow-500 mb-2">100%</div>
-                            <div className="text-gray-300 text-lg">Authentic</div>
-                            <div className="text-sm text-gray-400">Handcrafted Pieces</div>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <div className="text-5xl font-bold text-yellow-500 mb-2">∞</div>
-                            <div className="text-gray-300 text-lg">Legacy</div>
-                            <div className="text-sm text-gray-400">Timeless Beauty</div>
+                <div className="w-full p-2  grid sm:grid-cols-2 gap-4 mt-10">
+                    <div className="p-4 flex md:flex-row flex-col items-center gap-6 text-center md:text-left">
+                        <img src={ArtJwellery} alt="" className="w-22" />
+                        <div>
+                            <h1 className=" sm:text-xl font-semibold font-serif">The Art of Meenakari – A Legacy of 400 Years</h1>
+                            <p className=" md:text-sm text-xs text-gray-500">For four centuries, the exquisite art of Meenakari has been lovingly pursued by our family, preserving tradition while embracing elegance. Each piece reflects a deep heritage of craftsmanship and timeless beauty.</p>
                         </div>
                     </div>
-                </div>
+                    <div className=" p-4 flex  md:flex-row flex-col items-center gap-6 text-center md:text-left">
+                        <img src={JwelleryShop} alt="" className="w-22" />
+                        <div>
+                            <h1 className=" sm:text-xl font-semibold  font-serif">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
+                            <p className="  md:text-sm text-xs text-gray-500">Located in the heart of the city, our flagship store has been a recognized landmark since 1952, offering customers a blend of heritage and contemporary elegance</p>
 
-                {/* Contact & Location Section */}
-                <div className="grid md:grid-cols-3 gap-8">
-                    <div className="text-center p-8   rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Visit Our Store</h3>
-                        <p className="text-gray-700 text-sm">
-                            A139, Nadpuri Colony, Gurusharan Chabra Marg,
-                            Hawa Sadak, Jaipur 302019,<br />
-                            Rajasthan, India
-                        </p>
+                    </div>
+                    <div className="p-4 flex md:flex-row flex-col items-center gap-6 text-center md:text-left">
+                        <img src={BeautyfullArt} alt="" className="w-22" />
+                        <div>
+                            <h1 className=" sm:text-xl font-semibold  font-serif">USP – Uniquely Striking Designs</h1>
+                            <p className="  md:text-sm text-xs text-gray-500">Our jewelry stands out with strangely beautiful designs and exquisite embellishments that draw attention, making every wearer shine with distinction.</p>
+
+                        </div>
+                    </div>
+                    <div className=" p-4 flex md:flex-row flex-col  items-center gap-6 text-center md:text-left">
+                        <img src={FinalTouch} alt="" className="w-22" />
+                        <div>
+                            <h1 className=" sm:text-xl font-semibold  font-serif">Final Touch</h1>
+                            <p className="  md:text-sm text-xs text-gray-500">Every creation receives meticulous finishing, polishing, and detailing, ensuring that the final piece is flawless and ready to make a statement.</p>
+
+                        </div>
                     </div>
 
-                    <div className="text-center p-8  rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Call Us</h3>
-                        <p className="text-gray-600">+91-9414051055</p>
-                    </div>
-
-                    <div className="text-center p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                        <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">Email Us</h3>
-                        <p className="text-gray-600">info@emporiadr.com</p>
-                    </div>
                 </div>
             </Container>
         </section>

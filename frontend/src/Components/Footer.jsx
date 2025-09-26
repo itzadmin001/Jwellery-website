@@ -106,7 +106,7 @@ function Footer() {
                         <h4 className="text-xl font-bold mb-6 text-yellow-500">Quick Links</h4>
                         <ul className="space-y-3">
                             <li><Link to="/" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Home</Link></li>
-                            <li><Link to="/shop" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Shop</Link></li>
+                            <li><Link to="/store" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Shop</Link></li>
                             <li><Link to="/about" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">About Us</Link></li>
                             <li><Link to="/contact" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Contact Us</Link></li>
                             <li><Link to="/gallery" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Gallery</Link></li>
