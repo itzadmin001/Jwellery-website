@@ -6,9 +6,9 @@ import { Outlet } from 'react-router-dom'
 function WebsiteMain() {
   return (
     <>
-     <Header/>
-     <Outlet/>
-     <Footer/> 
+      <Header />
+      <Outlet />
+      <Footer />
     </>
   )
 }

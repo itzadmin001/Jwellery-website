@@ -38,7 +38,7 @@ const Hero = () => {
         <section className="w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] flex items-center overflow-hidden" style={{
             backgroundImage: `url(${BunnerImage})`,
             backgroundSize: "cover",
-            backgroundPosition: "center"
+            backgroundPosition: "center",
         }}>
             <Container classes="flex items-center  ">
                 <div className=" font-semibold w-2/3 px-3 mt-5">
