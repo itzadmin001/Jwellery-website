@@ -5,6 +5,9 @@ import Store from "./Pages/Store"
 import About from "./Pages/About"
 import Profile from "./Pages/Profile"
 import WishList from "./Pages/WishList"
+import PrivacyPolicy from "./Pages/PrivacyPolicy"
+import RefundPolicy from "./Pages/RefundPolicy"
+import TermsandConditions from "./Pages/TermsandConditions"
 
 
 function App() {
@@ -34,6 +37,18 @@ function App() {
         {
           path: "/wishlist",
           element: <WishList />
+        },
+        {
+          path: "/privacy-policy",
+          element: <PrivacyPolicy />
+        },
+        {
+          path: "/refund-policy",
+          element: <RefundPolicy />
+        },
+        {
+          path: "/terms-conditions",
+          element: <TermsandConditions />
         }
       ]
     }

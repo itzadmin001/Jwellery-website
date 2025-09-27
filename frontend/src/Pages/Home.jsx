@@ -109,7 +109,7 @@ const Category = () => {
                             Categories.map((item, i) => {
                                 return (
 
-                                    <CategoryProduct data={item} />
+                                    <CategoryProduct key={i} data={item} />
                                 )
                             })
                         }

@@ -94,7 +94,7 @@ function About() {
                 </div>
 
                 {/* ===== Achievements Section ===== */}
-                <div className="text-center py-12 sm:text-left text-center">
+                <div className=" py-12 sm:text-left text-center ">
                     <div className=" mb-10">
                         <img src={About5} alt="" />
                     </div>

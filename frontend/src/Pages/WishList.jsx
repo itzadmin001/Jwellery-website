@@ -10,25 +10,25 @@ function WishList() {
             id: 1,
             image: Product3,
             title: "Elegant Diamond Ring",
-            price: "₹2,499",
+            price: "2,499",
         },
         {
             id: 2,
             image: Product3,
             title: "Gold Plated Bracelet",
-            price: "₹3,499",
+            price: "3,499",
         },
         {
             id: 3,
             image: Product3,
             title: "Elegant Silver Necklace",
-            price: "₹1,200",
+            price: "1,200",
         },
         {
             id: 4,
             image: Product3,
             title: "Luxury Earrings",
-            price: "₹1,999",
+            price: "1,999",
         },
     ];
 

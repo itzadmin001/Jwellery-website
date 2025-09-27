@@ -1,6 +1,6 @@
 // Header.jsx
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "./Container";
 import WhatsappImage from "../../public/Images/whatsapp-icon.png"
 
@@ -29,6 +29,8 @@ export default function Header() {
     const [SearchOpen, SetSearchOpen] = useState(false)
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
+
+    const navigate = useNavigate()
 
     const whatsappNumber = "9414051055";
 
@@ -84,7 +86,7 @@ export default function Header() {
                     <div className="w-2/4 flex justify-center items-center">
                         <div className="text-center">
                             <div className="flex items-center justify-center gap-4">
-                                <div className="w-fit">
+                                <div className="w-fit" >
                                     <img
                                         src={LOGO}
                                         alt="Website Logo"
@@ -102,7 +104,7 @@ export default function Header() {
                 <Container classes="sm:px-6">
                     <div className="flex items-center justify-between h-12">
                         {/* Mobile Logo */}
-                        <div className="md:hidden block uppercase font-semibold">
+                        <div className="md:hidden block uppercase font-semibold" onClick={() => navigate(-1)}>
                             <img src={LOGO} alt="Logo" className="w-1/2" />
                         </div>
 

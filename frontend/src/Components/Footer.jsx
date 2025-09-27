@@ -118,7 +118,7 @@ function Footer() {
                         <h4 className="text-xl font-bold mb-6 text-yellow-500">Policies</h4>
                         <ul className="space-y-3 mb-8">
                             <li><Link to="/privacy-policy" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Privacy Policy</Link></li>
-                            <li><Link to="/refund-returns" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Refund & Returns</Link></li>
+                            <li><Link to="/refund-policy" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Refund & Returns</Link></li>
                             <li><Link to="/terms-conditions" className="text-gray-300 hover:text-yellow-500 transition-colors duration-300 text-sm">Terms & Conditions</Link></li>
                         </ul>
 
