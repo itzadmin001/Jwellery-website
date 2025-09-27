@@ -8,6 +8,7 @@ import WishList from "./Pages/WishList"
 import PrivacyPolicy from "./Pages/PrivacyPolicy"
 import RefundPolicy from "./Pages/RefundPolicy"
 import TermsandConditions from "./Pages/TermsandConditions"
+import Contact from "./Pages/Contact"
 
 
 function App() {
@@ -35,6 +36,10 @@ function App() {
           element: <Profile />
         },
         {
+          path: "/contact",
+          element: <Contact />
+        },
+        {
           path: "/wishlist",
           element: <WishList />
         },
@@ -51,6 +56,11 @@ function App() {
           element: <TermsandConditions />
         }
       ]
+    },
+    {
+      path: "*",
+      element: <h1>Page Not Found</h1>
+
     }
   ])
 

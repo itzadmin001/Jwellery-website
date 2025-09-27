@@ -90,7 +90,8 @@ export default function Header() {
                                     <img
                                         src={LOGO}
                                         alt="Website Logo"
-                                        className="md:w-1/2 mx-auto"
+                                        className="md:w-1/2 mx-auto "
+                                        onClick={() => navigate("/")}
                                     />
                                 </div>
                             </div>
