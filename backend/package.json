@@ -1,0 +1,69 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest",
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "test:ci": "cross-env NODE_ENV=test jest --runInBand",
+    "test:coverage": "cross-env NODE_ENV=test jest --coverage",
+    "test:category": "cross-env NODE_ENV=test jest tests/Category.testing.js",
+    "test:user": "cross-env NODE_ENV=test jest tests/User.testing.js",
+    "test:product": "cross-env NODE_ENV=test jest tests/Product.testing.js",
+    "test:cart": "cross-env NODE_ENV=test jest tests/Cart.testing.js",
+    "test:order": "cross-env NODE_ENV=test jest tests/Order.testing.js",
+    "test:payment": "cross-env NODE_ENV=test jest tests/Payment.testing.js",
+    "test:all": "node tests/runAllTests.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie": "^1.0.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "imagekit": "^6.0.0",
+    "ioredis": "^5.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.3",
+    "multer": "^2.0.2",
+    "razorpay": "^2.9.6",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.2.1",
+    "supertest": "^7.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/jest.setup.js"
+    ],
+    "testMatch": [
+      "**/tests/**/*.testing.js",
+      "**/?(*.)+(spec|test).js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js",
+      "!**/node_modules/**"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testTimeout": 30000,
+    "verbose": true
+  }
+}

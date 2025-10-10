@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+body {
+    user-select: none;
+    scroll-behavior: smooth;
+
+}
+
+.scroll::-webkit-scrollbar {
+    display: none
+}
+
+.productSearchbar::-webkit-scrollbar {
+    display: none;
+}

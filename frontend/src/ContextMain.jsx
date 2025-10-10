@@ -1,0 +1,122 @@
+// ContextMain.jsx
+import React, { createContext, useEffect, useState } from "react";
+import Product3 from "../public/Images/_BG70137.jpg";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+
+const MainContext = createContext();
+
+function ContextMain(props) {
+    const [cartOpen, setCartOpen] = useState(false);
+    const [Subcategory, SubSetCategory] = useState([]); // subcategory
+    const [Category, SetCategory] = useState([]); // Category
+    const [Productdata, SetProductdata] = useState([]); // Product
+    const [loading, setLoading] = useState(false);
+
+    const notify = (msg, flag) => toast(msg, { type: flag });
+
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const UserBaseUrl = import.meta.env.VITE_USER_BASE_URL;
+    const CategoryBaseUrl = import.meta.env.VITE_CATEGORY_BASE_URL;
+    const SubCategoryBaseUrl = import.meta.env.VITE_SUBCATEGORY_BASE_URL;
+    const ProductBaseUrl = import.meta.env.VITE_PRODUCTS_BASE_URL;
+    const CartBaseUrl = import.meta.env.VITE_CART_BASE_URL;
+    const OrderBaseUrl = import.meta.env.VITE_ORDER_BASE_URL;
+    const PaymentbaseUrl = import.meta.env.VITE_PAYMENT_BASE_URL;
+    const WishListBaseUrl = import.meta.env.VITE_WISHLIST_BASE_URL;
+
+
+
+    const fetchSubCategory = async (id) => {
+        try {
+            const response = await axios.get(BACKEND_URL + SubCategoryBaseUrl + "/get", {
+                params: id ? { id } : {},
+                withCredentials: true,
+            });
+            SubSetCategory(response.data.data || []);
+        } catch (err) {
+            SubSetCategory([]);
+            console.error("fetchSubCategory error:", err);
+        }
+    };
+
+
+    const fetchProduct = async ({ limit = 0, id, product_category, category, price }) => {
+
+        const params = {};
+        if (limit) params.limit = limit;
+        if (id) params.id = id;
+        if (category) params.category = category;
+        if (product_category) params.product_category = product_category;
+        if (price) params.price = price;
+
+        const QueryLimit = new URLSearchParams(params);
+        const response = await fetch(
+            BACKEND_URL + ProductBaseUrl + "/get?" + QueryLimit.toString()
+        );
+        const data = await response.json();
+        return data;
+
+    };
+
+    const clearSubCategory = () => {
+        SubSetCategory([]);
+    };
+
+    const fectchCategory = async () => {
+        try {
+            const response = await axios.get(BACKEND_URL + CategoryBaseUrl + "/get", {
+                withCredentials: true,
+            });
+            SetCategory(response.data.data || []);
+        } catch (err) {
+            SetCategory([]);
+            console.error("fectchCategory error:", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchSubCategory()
+        fectchCategory()
+        fetchProduct({ limit: 20 })
+            .then((success) => {
+                SetProductdata(success.data)
+            }).catch((err) => {
+                console.log(err)
+            })
+    }, []);
+
+    return (
+        <MainContext.Provider
+            value={{
+                Productdata,
+                cartOpen,
+                Category,
+                CartBaseUrl,
+                SetProductdata,
+                Subcategory,
+                PaymentbaseUrl,
+                setCartOpen,
+                WishListBaseUrl,
+                UserBaseUrl,
+                OrderBaseUrl,
+                ProductBaseUrl,
+                fetchSubCategory,
+                CategoryBaseUrl,
+                clearSubCategory,
+                SubCategoryBaseUrl,
+                BACKEND_URL,
+                fetchProduct,
+                notify,
+                fectchCategory,
+                loading,
+            }}
+        >
+            <ToastContainer />
+            {props.children}
+        </MainContext.Provider>
+    );
+}
+
+export default ContextMain;
+export { MainContext };
