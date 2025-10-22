@@ -37,18 +37,16 @@ function Store() {
     const {
         Productdata,
         Category,
-        fetchSubCategory,
         SetProductdata,
         fetchProduct,
-        Subcategory,
         fectchCategory,
-        clearSubCategory,
         loading,
+        categoryImages
     } = useContext(MainContext);
 
     const [activeCategoryId, setActiveCategoryId] = useState(null);
     const [limit, Setlimit] = useState(20);
-    const { product_category, category } = useParams()
+    const { category } = useParams()
     const [SearchParams] = useSearchParams()
     const [price, setPrice] = useState("");
     const [debouncedPrice, setDebouncedPrice] = useState(price);
@@ -62,7 +60,7 @@ function Store() {
 
     useEffect(() => {
         const timer = setTimeout(() => setDebouncedPrice(price), 500);
-        return () => clearTimeout(timer); // clear previous timer
+        return () => clearTimeout(timer);
     }, [price]);
 
 
@@ -75,7 +73,7 @@ function Store() {
 
 
     const getData = () => {
-        fetchProduct(limit)
+        fetchProduct(limit, category)
             .then((success) => {
                 SetProductdata(success.data)
             }).catch((err) => {
@@ -106,14 +104,13 @@ function Store() {
 
     useEffect(() => {
         seturlQuery()
-    }, [limit, product_category])
+    }, [limit, category])
 
 
     useEffect(
         () => {
             fetchProduct({
                 limit,
-                product_category,
                 price: debouncedPrice,
                 category
             })
@@ -123,7 +120,7 @@ function Store() {
                 }).catch((err) => {
                     SetProductdata([])
                 })
-        }, [limit, product_category, debouncedPrice]
+        }, [limit, debouncedPrice, category]
     )
 
     useEffect(
@@ -135,25 +132,19 @@ function Store() {
         }, []
     )
 
-    // When user clicks a Category checkbox:
     const handleCategorySelect = (item) => {
         if (activeCategoryId === item._id) {
             setActiveCategoryId(null);
-            clearSubCategory();
         } else {
             const slug = item.slug || item._id;
             setActiveCategoryId(item._id);
-            fetchSubCategory(item._id);
         }
     };
 
     const NavigateHandler = (Category, data) => {
-
         if (activeSubCategory === data) {
-            SetActiveSubcategory(null)
             navigate(`/store/${Category}`)
         } else {
-            SetActiveSubcategory(data)
             navigate(`/store/${Category}/${data}`)
         }
     }
@@ -164,7 +155,7 @@ function Store() {
             {/* Banner */}
             <section aria-label="Promotion" className="pb-4">
                 <div className="relative overflow-hidden bg-amber-200/40">
-                    <SlickSlider Category={Category} />
+                    <SlickSlider Category={Category} categoryImages={categoryImages} />
                 </div>
             </section>
 
@@ -198,28 +189,14 @@ function Store() {
                                                         <input
                                                             type="checkbox"
                                                             checked={activeCategoryId === item._id}
-                                                            onChange={() => handleCategorySelect(item)}
+                                                            onChange={() => {
+                                                                handleCategorySelect(item)
+                                                                NavigateHandler(item.slug, activeSubCategory)
+                                                            }}
                                                             className="accent-[#C19B50] cursor-pointer"
                                                         />
                                                         <span>{item?.name}</span>
                                                     </label>
-
-                                                    {/* --- Render subcategories RIGHT under this Category only if it's active --- */}
-                                                    {activeCategoryId === item._id && Subcategory && Subcategory.length > 0 && (
-                                                        <div className="pl-5 space-y-2 mt-2">
-                                                            {Subcategory.map((sub) => (
-                                                                <label key={sub._id} className="flex items-center gap-2 cursor-pointer">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={activeSubCategory === sub.slug}
-                                                                        className="accent-[#C19B50] cursor-pointer"
-                                                                        onChange={() => NavigateHandler(item.slug, sub.slug)}
-                                                                    />
-                                                                    <span>{sub?.name}</span>
-                                                                </label>
-                                                            ))}
-                                                        </div>
-                                                    )}
                                                 </div>
                                             );
                                         })}
@@ -277,22 +254,10 @@ function Store() {
                                                         <span>{item?.name}</span>
                                                     </label>
                                                 ))}
-
-                                                {Subcategory && Subcategory.length > 0 && (
-                                                    <div className="pl-5 space-y-2">
-                                                        {Subcategory.map((sub) => (
-                                                            <label key={sub._id} className="flex items-center gap-2">
-                                                                <input type="checkbox" className="accent-[#C19B50]" onChange={() => handleSubcategorySelect(sub)} />
-                                                                <span>{sub?.name}</span>
-                                                            </label>
-                                                        ))}
-                                                    </div>
-                                                )}
                                             </div>
                                         )}
                                     </div>
 
-                                    {/* ... rest kept same as desktop (Price, Availability etc.) ... */}
                                 </div>
 
                                 <div className="p-4 border-t bg-white">

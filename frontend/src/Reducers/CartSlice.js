@@ -62,7 +62,7 @@ export const CartSlice = createSlice({
             localStorage.setItem("cart", JSON.stringify(currentState));
         },
         DbTocart: (currentState, { payload }) => {
-            currentState.data = payload.newCart
+            currentState.data = payload.newcart
             currentState.total = payload.total
             localStorage.setItem("cart", JSON.stringify(currentState));
 

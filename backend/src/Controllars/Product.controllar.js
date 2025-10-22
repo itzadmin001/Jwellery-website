@@ -3,114 +3,161 @@ const CategoryModel = require("../Models/Category.model");
 const ImageKit = require("imagekit");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
-const SubCategoryModel = require("../Models/Subcategories.model");
 const { default: mongoose } = require("mongoose");
+const Product = require("../Models/Product.model");
+const { XlsxTojson } = require("../Utils/Xlsx");
 
-// Initialize ImageKit
-const imagekit = new ImageKit({
-    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-    urlEndpoint: process.env.IMAGEKIT_URL_ENGPOINT
-});
+
+function isValidUrl(url) {
+    if (!url || typeof url !== "string") return false;
+    try {
+        new URL(url);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
 
 async function createProduct(req, res) {
+    // Clean, robust createProduct implementation
     try {
+        const body = req.body || {};
+
+        // small helpers
+        const toArray = (val) => {
+            if (!val && val !== 0) return [];
+            if (Array.isArray(val)) return val;
+            if (typeof val === 'string') return val.split(',').map(s => s.trim()).filter(Boolean);
+            return [val];
+        };
+
+        const toNumber = (v, fallback = undefined) => {
+            if (v === undefined || v === null || v === '') return fallback;
+            const n = Number(v);
+            return Number.isNaN(n) ? fallback : n;
+        };
+
+        const toBoolean = (v, fallback = false) => {
+            if (v === undefined || v === null) return fallback;
+            if (typeof v === 'boolean') return v;
+            if (typeof v === 'string') return ['true', '1', 'yes'].includes(v.toLowerCase());
+            return Boolean(v);
+        };
+
         const {
             name,
             slug,
+            description = '',
             price,
-            color,
-            category,
-            product_category,
-            status,
-            stock,
-            sale
-        } = req.body;
+            originalPrice,
+            category, // expect category name (e.g., 'Earrings')
+            collection = '',
+            material = '',
+            weight = '',
+            dimensions = '',
+            sku,
+            stockQuantity = 0,
+            features = [],
+            image,
+            relatedImage = [],
+            certifications = [],
+            tags = [],
+            metaTitle = '',
+            metaDescription = '',
+            featured = false,
+            status = true
+        } = body;
 
-        console.log(product_category)
-        // Validate required fields
-        if (!name || !slug || !price || !category || !product_category) {
-            return res.status(400).json({
-                message: "Name, slug, price, and category are required"
-            });
+        // basic validation
+        const errors = [];
+        if (!name) errors.push('name is required');
+        if (!slug) errors.push('slug is required');
+        if (price === undefined || price === null || price === '') errors.push('price is required');
+        if (!category) errors.push('category is required');
+        if (!sku) errors.push('sku is required');
+        if (!image) errors.push('image is required');
+        if (errors.length) return res.status(400).json({ message: 'validation failed', errors });
+
+        // verify image url optionally
+        if (!isValidUrl(image)) return res.status(400).json({ message: 'invalid image url' });
+
+        // check unique sku
+        const existingSku = await ProductModel.findOne({ sku: String(sku).trim() });
+        if (existingSku) return res.status(409).json({ message: 'SKU already exists' });
+
+        // Resolve or create category: match by slug case-insensitive
+        const categorySlug = String(category).trim().toLowerCase().replace(/\s+/g, '-');
+        let categoryDoc = await CategoryModel.findOne({ slug: categorySlug });
+        if (!categoryDoc) {
+            // create category with given name -> slug
+            categoryDoc = await CategoryModel.create({ name: String(category).trim(), slug: categorySlug });
         }
 
+        // Prepare product data
+        const productData = {
+            name: String(name).trim(),
+            slug: String(slug).trim(),
+            description: String(description || ''),
+            price: toNumber(price),
+            originalPrice: toNumber(originalPrice, undefined),
+            category: categoryDoc._id,
+            collection: String(collection || ''),
+            material: String(material || ''),
+            weight: String(weight || ''),
+            dimensions: String(dimensions || ''),
+            sku: String(sku).trim(),
+            stockQuantity: toNumber(stockQuantity, 0),
+            features: toArray(features),
+            image: String(image).trim(),
+            relatedImage: toArray(relatedImage),
+            certifications: toArray(certifications),
+            tags: toArray(tags),
+            metaTitle: String(metaTitle || ''),
+            metaDescription: String(metaDescription || ''),
+            featured: toBoolean(featured, false),
+        };
 
+        const created = await ProductModel.create(productData);
+        const populated = await ProductModel.findById(created._id).populate('category');
 
-        let imageUrl = null;
-        let relatedImageUrl = [];
-
-
-        if (req.files) {
-            try {
-                const fileExtension = path.extname(req.files.image[0].originalname);
-                const uniqueFileName = `${uuidv4()}${fileExtension}`;
-                const uploadResult = await imagekit.upload({
-                    file: req.files.image[0].buffer,
-                    fileName: uniqueFileName,
-                    folder: "/product"
-                });
-                imageUrl = uploadResult.url;
-
-                for (const file of req.files.relatedImage) {
-
-                    try {
-                        const fileExtension = path.extname(file.originalname);
-                        const uniqueFileName = `${uuidv4()}${fileExtension}`;
-                        const uploadResult = await imagekit.upload({
-                            file: file.buffer,
-                            fileName: uniqueFileName,
-                            folder: "/product/relatedImage"
-                        });
-                        relatedImageUrl.push(uploadResult.url);
-
-                    } catch (uploadError) {
-                        console.error("ImageKit upload error:", uploadError);
-                        return res.status(500).json({
-                            message: "Failed to upload image",
-                            error: uploadError.message
-                        });
-                    }
-                }
-
-            } catch (uploadError) {
-                console.error("ImageKit upload error:", uploadError);
-                return res.status(500).json({
-                    message: "Failed to upload image",
-                    error: uploadError.message
-                });
-            }
-        }
-
-
-        const created = await ProductModel.create({
-            name,
-            slug,
-            image: imageUrl,
-            price,
-            relatedImage: relatedImageUrl,
-            color,
-            subcategory: product_category,
-            category,
-            status: status !== undefined ? status : true,
-            stock: stock !== undefined ? stock : true,
-            sale: sale !== undefined ? sale : false
-        });
-
-        return res.status(201).json({
-            message: "Product created successfully",
-            data: created
-        });
+        return res.status(201).json({ message: 'Product created successfully', data: populated });
     } catch (error) {
-        console.error("Product creation error:", error);
-        return res.status(500).json({ message: error.message });
+        console.error('Product creation error:', error);
+        return res.status(500).json({ message: 'internal server error', error: error.message });
+    }
+}
+
+async function addProductExcel(req, res) {
+
+    try {
+
+        const data = await XlsxTojson(req, res)
+
+        if (data.successData.length > 0) {
+            return res.status(200).json({
+                message: "Product added from excel",
+                data: data
+            })
+        }
+        else {
+            return res.status(400).json({
+                message: "No product added from excel",
+                data: data.errorData
+            })
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            message: "internal server error"
+        })
     }
 }
 
 async function getProducts(req, res) {
     try {
         const query = req.query;
-        const { id, product_category, category, limit, price } = query;
+        const { id, category, limit, price } = query;
+
 
         let data = [];
         let newQuery = {}
@@ -123,33 +170,20 @@ async function getProducts(req, res) {
         }
 
         if (id && id !== undefined) {
-
-            data = await ProductModel.findById(id).populate(["category", "subcategory"]);
-
+            // populate should reference the schema field name 'category' (lowercase)
+            data = await ProductModel.findById(id).populate("category");
         } else {
-            const byCategory = await SubCategoryModel.findOne({ slug: product_category })
-            if (byCategory != undefined) {
-                newQuery.subcategory = byCategory._id
-
-                data = await ProductModel.find(newQuery).populate(["category", "subcategory"]).limit(parseInt(limit));
-
+            const Category = await CategoryModel.findOne({ slug: category })
+            if (Category != undefined) {
+                newQuery.category = Category._id
+                data = await ProductModel.find(newQuery).populate("category").limit(parseInt(limit))
+                return res.status(200).json({
+                    message: "Product fetched successfully",
+                    data
+                });
             } else {
-                const byparantCategory = await CategoryModel.findOne({ _id: category })
-                if (byparantCategory != undefined) {
-                    newQuery.category = byparantCategory._id
-                    data = await ProductModel.find(newQuery).populate(["category", "subcategory"]).limit(parseInt(limit))
-                    return res.status(200).json({
-                        message: "Product fetched successfully",
-                        data
-                    });
-                } else {
-                    data = await ProductModel.find(newQuery)
-                        .populate(["category", "subcategory"])
-                        .limit(parseInt(limit));
-
-                }
+                data = await ProductModel.find(newQuery).populate("category").limit(parseInt(limit))
             }
-
         }
         return res.status(200).json({
             message: "Product fetched successfully",
@@ -163,9 +197,24 @@ async function getProducts(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
 async function getAllProducts(req, res) {
+
     try {
-        const FindAllProduct = await ProductModel.find();
+
+        const { categoryId } = req.query;
+
+        if (categoryId) {
+            const FindAllProduct = await ProductModel.find({ category: categoryId }).populate("category");
+            if (FindAllProduct) {
+                return res.status(200).json({
+                    message: "product fetch by category",
+                    FindAllProduct
+                })
+            }
+        }
+
+        const FindAllProduct = await ProductModel.find().populate("category");
         if (FindAllProduct) {
             res.status(200).json({
                 message: "all product fetch ",
@@ -179,19 +228,33 @@ async function getAllProducts(req, res) {
         })
     }
 }
+
 async function updateProduct(req, res) {
     try {
         const { id } = req.params;
         const {
             name,
             slug,
+            description,
             price,
-            color,
+            originalPrice,
             category,
-            product_category,
-            status,
-            stock,
-            sale
+            collection,
+            material,
+            weight,
+            dimensions,
+            sku,
+            inStock,
+            stockQuantity,
+            features,
+            image,
+            relatedImage,
+            certifications,
+            tags,
+            metaTitle,
+            metaDescription,
+            featured,
+            status
         } = req.body;
 
         // Check if product exists
@@ -210,45 +273,61 @@ async function updateProduct(req, res) {
             }
         }
 
+        // Check if SKU is being updated and if it conflicts with another product
+        if (sku && sku !== existingProduct.sku) {
+            const skuExists = await ProductModel.findOne({ sku, _id: { $ne: id } });
+            if (skuExists) {
+                return res.status(409).json({
+                    message: "Product with this SKU already exists"
+                });
+            }
+        }
+
         let updateData = {};
 
         // Only update fields that are provided
         if (name !== undefined) updateData.name = name;
         if (slug !== undefined) updateData.slug = slug;
-        if (price !== undefined) updateData.price = price;
-        if (color !== undefined) updateData.color = color;
+        if (description !== undefined) updateData.description = description;
+        if (price !== undefined) updateData.price = Number(price);
+        if (originalPrice !== undefined) updateData.originalPrice = Number(originalPrice);
         if (category !== undefined) updateData.category = category;
-        if (product_category !== undefined) updateData.subcategory = product_category;
-        if (status !== undefined) updateData.status = status;
-        if (stock !== undefined) updateData.stock = stock;
-        if (sale !== undefined) updateData.sale = sale;
-
-        // Handle image update if file is provided
-        if (req.file) {
-            try {
-                const fileExtension = path.extname(req.file.originalname);
-                const uniqueFileName = `${uuidv4()}${fileExtension}`;
-
-                const uploadResult = await imagekit.upload({
-                    file: req.file.buffer,
-                    fileName: uniqueFileName,
-                    folder: "/product"
-                });
-                updateData.image = uploadResult.url;
-            } catch (uploadError) {
-                console.error("ImageKit upload error:", uploadError);
-                return res.status(500).json({
-                    message: "Failed to upload image",
-                    error: uploadError.message
-                });
+        if (collection !== undefined) updateData.collection = collection;
+        if (material !== undefined) updateData.material = material;
+        if (weight !== undefined) updateData.weight = weight;
+        if (dimensions !== undefined) updateData.dimensions = dimensions;
+        if (sku !== undefined) updateData.sku = sku;
+        if (inStock !== undefined) updateData.inStock = Boolean(inStock);
+        if (stockQuantity !== undefined) updateData.stockQuantity = Number(stockQuantity);
+        if (features !== undefined) {
+            updateData.features = Array.isArray(features) ? features : (typeof features === "string" ? features.split(",").map(s => s.trim()) : []);
+        }
+        if (image !== undefined) updateData.image = image;
+        if (relatedImage !== undefined) {
+            if (Array.isArray(relatedImage)) {
+                updateData.relatedImage = relatedImage;
+            } else if (typeof relatedImage === "string" && relatedImage.trim() !== "") {
+                updateData.relatedImage = relatedImage.split(",").map(s => s.trim()).filter(s => s);
+            } else {
+                updateData.relatedImage = [];
             }
         }
+        if (certifications !== undefined) {
+            updateData.certifications = Array.isArray(certifications) ? certifications : (typeof certifications === "string" ? certifications.split(",").map(s => s.trim()) : []);
+        }
+        if (tags !== undefined) {
+            updateData.tags = Array.isArray(tags) ? tags : (typeof tags === "string" ? tags.split(",").map(s => s.trim()) : []);
+        }
+        if (metaTitle !== undefined) updateData.metaTitle = metaTitle;
+        if (metaDescription !== undefined) updateData.metaDescription = metaDescription;
+        if (featured !== undefined) updateData.featured = Boolean(featured);
+        if (status !== undefined) updateData.status = Boolean(status);
 
         const updatedProduct = await ProductModel.findByIdAndUpdate(
             id,
             updateData,
             { new: true, runValidators: true }
-        ).populate(["category", "subcategory"]);
+        ).populate("category");
 
         if (!updatedProduct) {
             return res.status(404).json({
@@ -280,11 +359,11 @@ async function updateProductStatus(req, res) {
             return res.status(400).json({ message: "Invalid product id" });
         }
 
-        // whitelist allowed fields to update
-        const ALLOWED_FIELDS = new Set(['featured', 'status', 'stock', 'sale']);
+        // whitelist allowed fields to update - only status, featured, and inStock
+        const ALLOWED_FIELDS = new Set(['status', 'featured', 'inStock']);
 
         if (!ALLOWED_FIELDS.has(field)) {
-            return res.status(400).json({ message: `Field '${field}' is not allowed to update` });
+            return res.status(400).json({ message: `Field '${field}' is not allowed to update. Only 'status', 'featured', and 'inStock' are allowed.` });
         }
 
         // convert new_status to boolean (accepts 'true'/'false', true/false, '1'/'0')
@@ -304,7 +383,7 @@ async function updateProductStatus(req, res) {
             id,
             { $set: updateObj },
             { new: true }
-        ).populate(["category", "subcategory"]);
+        ).populate("category");
 
         if (!updatedProduct) {
             return res.status(404).json({ message: "Product not found" });
@@ -373,6 +452,6 @@ async function deleteProduct(req, res) {
     }
 }
 
-module.exports = { createProduct, getAllProducts, getProducts, updateProduct, updateProductStatus, deleteProduct };
+module.exports = { createProduct, addProductExcel, getAllProducts, getProducts, updateProduct, updateProductStatus, deleteProduct };
 
 

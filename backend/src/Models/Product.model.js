@@ -1,34 +1,97 @@
 const mongoose = require("mongoose");
 
-
 const ProductModel = new mongoose.Schema({
     name: {
         type: String,
-        maxLength: 30
+        required: true,
+        trim: true,
+        maxLength: 200
     },
     slug: {
         type: String,
-        maxLength: 30
+        trim: true,
+        maxLength: 200,
+        index: true
     },
-    image: {
-        type: String
+    description: {
+        type: String,
+        default: ""
     },
-    relatedImage: [
-        {
-            type: String,
-        }
-    ],
     price: {
         type: Number,
-        min: 1
+        min: 0,
+        required: true
+    },
+    originalPrice: {
+        type: Number,
+        min: 0
     },
     category: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category"
+        ref: "Category",
+        required: true
     },
-    subcategory: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "subcategory"
+    collection: {
+        type: String,
+        default: ""
+    },
+    material: {
+        type: String,
+        default: ""
+    },
+    weight: {
+        type: String,
+        default: ""
+    },
+    dimensions: {
+        type: String,
+        default: ""
+    },
+    sku: {
+        type: String,
+        trim: true,
+        unique: true,
+        required: true
+    },
+    inStock: {
+        type: Boolean,
+        default: true
+    },
+    stockQuantity: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+    features: {
+        type: [String],
+        default: []
+    },
+
+    image: {
+        type: String,
+        required: true
+    },
+
+    relatedImage: {
+        type: [String],
+        default: []
+    },
+
+    certifications: {
+        type: [String],
+        default: []
+    },
+    tags: {
+        type: [String],
+        default: []
+    },
+    metaTitle: {
+        type: String,
+        default: ""
+    },
+    metaDescription: {
+        type: String,
+        default: ""
     },
     featured: {
         type: Boolean,
@@ -37,14 +100,6 @@ const ProductModel = new mongoose.Schema({
     status: {
         type: Boolean,
         default: true
-    },
-    stock: {
-        type: Boolean,
-        default: true
-    },
-    sale: {
-        type: Boolean,
-        default: false
     }
 }, {
     timestamps: true

@@ -88,6 +88,7 @@ function ProductDetails() {
                     />
                     <div className=" flex items-center gap-2 ">
                         {
+
                             relatedImages.map((item, i) => {
                                 return (
                                     <img

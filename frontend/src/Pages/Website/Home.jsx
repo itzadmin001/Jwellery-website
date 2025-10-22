@@ -23,7 +23,7 @@ import { MainContext } from "../../ContextMain"
 
 
 function Home() {
-    const { Subcategory, Productdata, fetchSubCategory } = useContext(MainContext)
+    const { Category, Productdata } = useContext(MainContext)
 
 
 
@@ -33,7 +33,7 @@ function Home() {
     return (
         <div>
             <Hero />
-            <Category Subcategory={Subcategory} />
+            <CategoryDisplay Category={Category} />
             <FeaturedCategory Productdata={Productdata} />
             <CustomProduct />
             <AboutUs />
@@ -63,8 +63,7 @@ const Hero = () => {
 }
 
 
-const Category = ({ Subcategory }) => {
-
+const CategoryDisplay = ({ Category }) => {
 
 
 
@@ -83,14 +82,10 @@ const Category = ({ Subcategory }) => {
                         </div>
                     </div>
                     <div className=" flex items-center gap-3 justify-center mt-10 overflow-x-auto scroll">
-                        {
-                            (() => {
-                                const filtered = Subcategory.filter(item => item.status === true);
-                                return filtered.length > 0
-                                    ? filtered.map((item, i) => <CategoryProduct key={i} data={item} />)
-                                    : <h1>Category NOT found</h1>;
-                            })()
-                        }
+                        {/* product category */}
+                        {Category.map((item, index) => (
+                            <CategoryProduct key={item._id} data={item} index={index} />
+                        ))}
                     </div>
                 </div>
             </Container>

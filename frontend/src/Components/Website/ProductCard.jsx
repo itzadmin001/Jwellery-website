@@ -85,7 +85,7 @@ function ProductCard({
             <div className="relative h-48 sm:h-64 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
                 <img
                     src={data.image}
-                    alt={`${data.name} - ${data.subcategory.name}`}
+                    alt={`${data?.name} `}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
 
@@ -98,7 +98,7 @@ function ProductCard({
             <div className="p-3 sm:p-6">
                 {/* Category */}
                 <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1 sm:mb-2">
-                    {data?.subcategory.name}
+                    {data?.category.name}
                 </p>
 
                 {/* Title */}

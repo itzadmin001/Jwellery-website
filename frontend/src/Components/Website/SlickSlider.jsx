@@ -7,7 +7,7 @@ function Container({ classes, children }) {
     return <div className={classes}>{children}</div>;
 }
 
-function SlickSlider({ Category }) {
+function SlickSlider({ Category, categoryImages }) {
     const settings = {
         dots: false,
         infinite: true,
@@ -15,57 +15,26 @@ function SlickSlider({ Category }) {
         autoplaySpeed: 3000,
         arrows: false,
         speed: 800,
-        slidesToShow: 1,
+        slidesToShow: 2,
         slidesToScroll: 1,
     };
 
-    const slides = [
-        {
-            image: "https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg",
-            title: "Luxury at a price you’ll love",
-            subtitle: "Weekly Highlight",
-            desc: "Discover handcrafted pieces with timeless elegance.",
-        },
-        {
-            image: "https://images.pexels.com/photos/2987880/pexels-photo-2987880.jpeg",
-            title: "Elegance in Every Detail",
-            subtitle: "New Collection",
-            desc: "Handcrafted diamond & gold pieces for every occasion.",
-        },
-        {
-            image: "https://images.pexels.com/photos/3266703/pexels-photo-3266703.jpeg",
-            title: "Shine with Confidence",
-            subtitle: "Trending Now",
-            desc: "Make your style unforgettable with our exclusive designs.",
-        },
-        {
-            image: "https://images.pexels.com/photos/13787988/pexels-photo-13787988.jpeg",
-            title: "Timeless Beauty",
-            subtitle: "Classic Collection",
-            desc: "Discover the power of tradition with modern elegance.",
-        },
-        {
-            image: "https://images.pexels.com/photos/3641055/pexels-photo-3641055.jpeg",
-            title: "Luxury You Deserve",
-            subtitle: "Special Offer",
-            desc: "Get exclusive deals on fine jewellery this week.",
-        },
-    ];
+
 
     return (
         <div className="slider-container w-full">
             <Slider {...settings}>
-                {Category?.map((slide, index) => (
-                    <div key={index} className="relative h-[60vh]">
+                {categoryImages?.map((image, index) => (
+                    <div key={index} className="relative h-[60vh] bg-white">
                         {/* Background Image */}
                         <img
-                            src={slide.image}
-                            alt={slide.title}
-                            className="w-full h-full object-cover"
+                            src={image}
+                            alt={`Slide ${index}`}
+                            className="w-full h-full object-contain"
                         />
 
                         {/* Overlay Text */}
-                        <Container classes="absolute inset-0 flex items-center bg-black/40">
+                        <Container classes="absolute inset-0 flex items-center bg-black/10">
 
                         </Container>
                     </div>

@@ -25,25 +25,13 @@ import Orders from "./Pages/Admin/Orders"
 import AdminLogin from "./Pages/Admin/AdminLogin"
 
 
-// category all pages
+// product all pages
 
-import CategoryAdd from "./Pages/Admin/Category/Add"
-import CategoryEdit from "./Pages/Admin/Category/Edit"
-import CategoryView from "./Pages/Admin/Category/View"
-
-
-// product all pages 
-
-import ProductAdd from "./Pages/Admin/Products/Add"
-import ProductEdit from "./Pages/Admin/Products/Edit"
 import ProductView from "./Pages/Admin/Products/View"
+import ProductAdd from "./Pages/Admin/Products/Add"
 
 
-// product category pages 
 
-import ProductCategoryView from "./Pages/Admin/ProductCategory/View"
-import ProductCategoryAdd from "./Pages/Admin/ProductCategory/Add"
-import ProductCategoryEdit from "./Pages/Admin/ProductCategory/Edit"
 import { WishlistToState } from "./Reducers/WishList"
 import MyOrders from "./Pages/Website/MyOrders"
 import Transitions from "./Pages/Admin/Transitions"
@@ -151,61 +139,15 @@ function App() {
           element: <Orders />
         },
         {
-          path: "category",
-          children: [
-            {
-
-              path: "/admin/category/add",
-              element: <CategoryAdd />
-            },
-            {
-              path: "/admin/category/view",
-              element: <CategoryView />
-            },
-            {
-              path: "/admin/category/edit/:id",
-              element: <CategoryEdit />
-            }
-          ]
-        },
-        {
           path: "product",
-          children: [
-            {
-
-              path: "/admin/product/add",
-              element: <ProductAdd />
-            },
-            {
-              path: "/admin/product/view",
-              element: <ProductView />
-            },
-            {
-              path: "/admin/product/edit/:id",
-              element: <ProductEdit />
-            }
-          ]
+          element: <ProductView />
         },
         {
-          path: "product-category",
-          children: [
-            {
-
-              path: "/admin/product-category/add",
-              element: <ProductCategoryAdd />
-            },
-            {
-              path: "/admin/product-category/view",
-              element: <ProductCategoryView />
-            },
-            {
-              path: "/admin/product-category/edit/:id",
-              element: < ProductCategoryEdit />
-            }
-          ]
+          path: "product/add",
+          element: <ProductAdd />
         },
         {
-          path: "transtions",
+          path: "transactions",
           element: <Transitions />
         }
       ]

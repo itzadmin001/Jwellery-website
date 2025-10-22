@@ -15,7 +15,6 @@ function Cart({ cartOpen, setCartOpen }) {
 
 
 
-
     const checkOutHandler = (e) => {
         setCartOpen()
         e.preventDefault()
@@ -43,6 +42,7 @@ function Cart({ cartOpen, setCartOpen }) {
 
     }
     const cartProducts = []
+
 
 
     for (const p of Productdata) {

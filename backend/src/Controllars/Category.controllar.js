@@ -2,51 +2,19 @@ const CategoryModel = require("../Models/Category.model");
 const ImageKit = require("imagekit");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
-const SubCategoryModel = require("../Models/Subcategories.model");
 
-// Initialize ImageKit
-const imagekit = new ImageKit({
-    publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-    privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-    urlEndpoint: process.env.IMAGEKIT_URL_ENGPOINT
-});
 
 // Create a new category
 async function createCategory(req, res) {
     try {
-        const { name, slug, } = req.body;
-        let imageUrl = null;
+        const { name, slug, image } = req.body;
 
-        // Validate required fields
-        if (!name || !slug) {
+        if (!name || !slug || !image) {
             return res.status(400).json({
-                message: "Name and slug are required fields"
+                message: "Name image and slug are required fields"
             });
         }
 
-
-        // Handle image upload if file is provided
-        if (req.file) {
-            try {
-                const fileExtension = path.extname(req.file.originalname);
-                const uniqueFileName = `${uuidv4()}${fileExtension}`;
-
-                const uploadResult = await imagekit.upload({
-                    file: req.file.buffer,
-                    fileName: uniqueFileName,
-                    folder: "/category"
-                });
-                imageUrl = uploadResult.url;
-            } catch (uploadError) {
-                console.error("ImageKit upload error:", uploadError);
-                return res.status(500).json({
-                    message: "Failed to upload image",
-                    error: uploadError.message
-                });
-            }
-        }
-
-        // Check if category with same slug already exists
         const existingCategory = await CategoryModel.findOne({ slug });
         if (existingCategory) {
             return res.status(409).json({
@@ -54,11 +22,10 @@ async function createCategory(req, res) {
             });
         }
 
-        // Create new category
         const created = await CategoryModel.create({
             name,
             slug,
-            image: imageUrl,
+            image
         });
 
         return res.status(201).json({
@@ -74,7 +41,6 @@ async function createCategory(req, res) {
     }
 }
 
-// Get categories - all categories or specific category by ID
 async function getCategories(req, res) {
     try {
         const { id } = req.query;
@@ -118,7 +84,7 @@ async function getCategories(req, res) {
 async function updateCategory(req, res) {
     try {
         const { id } = req.params;
-        const { name, slug } = req.body;
+        const { name, slug, image } = req.body;
 
         // Validate ID
         if (!id) {
@@ -137,55 +103,11 @@ async function updateCategory(req, res) {
 
         let updateData = {};
 
-        // Handle image update if file is provided
-        if (req.file) {
-            try {
-                const fileExtension = path.extname(req.file.originalname);
-                const uniqueFileName = `${uuidv4()}${fileExtension}`;
-
-                const uploadResult = await imagekit.upload({
-                    file: req.file.buffer,
-                    fileName: uniqueFileName,
-                    folder: "/category"
-                });
-                updateData.image = uploadResult.url;
-
-                // Optional: Delete old image from ImageKit
-                if (existingCategory.image) {
-                    try {
-                        const urlEndpoint = process.env.IMAGEKIT_URL_ENGPOINT;
-                        const relativePath = existingCategory.image.replace(urlEndpoint, "");
-
-                        const list = await imagekit.listFiles({
-                            path: relativePath.startsWith("/") ? path.posix.dirname(relativePath) : relativePath
-                        });
-                        const target = list.find(f =>
-                            f.url === existingCategory.image ||
-                            ("/" + f.filePath) === relativePath ||
-                            f.filePath === relativePath
-                        );
-
-                        if (target && target.fileId) {
-                            await imagekit.deleteFile(target.fileId);
-                        }
-                    } catch (deleteError) {
-                        console.error("Old image deletion error:", deleteError);
-                        // Continue with update even if old image deletion fails
-                    }
-                }
-            } catch (uploadError) {
-                console.error("ImageKit upload error:", uploadError);
-                return res.status(500).json({
-                    message: "Failed to upload new image",
-                    error: uploadError.message
-                });
-            }
-        }
 
         // Update other fields only if provided
         if (name !== undefined) updateData.name = name;
+        if (image !== undefined) updateData.image = image;
         if (slug !== undefined) {
-            // Check if new slug conflicts with existing categories (excluding current one)
             const slugExists = await CategoryModel.findOne({
                 slug,
                 _id: { $ne: id }
@@ -277,37 +199,6 @@ async function deleteCategory(req, res) {
             return res.status(404).json({
                 message: "Category not found"
             });
-        }
-
-        const FindLinkCategory = await SubCategoryModel.findOne({ category: id })
-        if (FindLinkCategory) {
-            return res.status(409).json({
-                success: false,
-                message: "Category is linked with a subcategory, cannot delete."
-            });
-        }
-        // Delete image from ImageKit if exists
-        if (category.image) {
-            try {
-                const urlEndpoint = process.env.IMAGEKIT_URL_ENGPOINT;
-                const relativePath = category.image.replace(urlEndpoint, "");
-
-                const list = await imagekit.listFiles({
-                    path: relativePath.startsWith("/") ? path.posix.dirname(relativePath) : relativePath
-                });
-                const target = list.find(f =>
-                    f.url === category.image ||
-                    ("/" + f.filePath) === relativePath ||
-                    f.filePath === relativePath
-                );
-
-                if (target && target.fileId) {
-                    await imagekit.deleteFile(target.fileId);
-                }
-            } catch (deleteError) {
-                console.error("Image deletion error:", deleteError);
-                // Continue with category deletion even if image deletion fails
-            }
         }
 
         // Delete category from database

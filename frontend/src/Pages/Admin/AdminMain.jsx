@@ -30,10 +30,11 @@ function AdminMain({ authLoading }) {
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center bg-white">Loading...</div>;
     }
+
     return (
-        <div className='grid grid-cols-5 min-h-screen'>
+        <div className='grid grid-cols-6 min-h-screen'>
             <SideBar />
-            <div className='col-span-4'>
+            <div className='col-span-5'>
                 <Header />
                 <div className='p-3'>
                     <Outlet />

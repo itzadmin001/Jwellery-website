@@ -1,14 +1,34 @@
-function CategoryProduct({ data }) {
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { MainContext } from "../../ContextMain";
+
+
+
+
+function CategoryProduct({ data, index }) {
+    const { categoryImages } = useContext(MainContext)
+    const navigate = useNavigate()
+
+
+
+
+
+    const imgSrc = categoryImages[index % categoryImages.length];
+
+
 
     return (
-        <div className="flex flex-col items-center group cursor-pointer p-2">
+        <div className="flex flex-col items-center group cursor-pointer p-2" onClick={() => navigate(`/store/${data.name}`)}>
             {/* Image container */}
             <div className="w-24 h-24  rounded-full overflow-hidden border-4 border-[#f4c24f] shadow-sm group-hover:shadow-md transition-all duration-300">
+
                 <img
-                    src={data.image}
+                    src={imgSrc}
                     alt={data.name}
-                    className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                 />
+
+
             </div>
 
             {/* Category Name */}

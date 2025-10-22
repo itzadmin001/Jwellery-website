@@ -7,6 +7,8 @@ async function createCart(req, res) {
         if (!product_id) {
             return res.status(400).json({ message: "product_id is required" });
         }
+
+
         for (let c of product_id) {
             const Dbcart = await CartModel.findOne({ user: req.user._id, product: c.pId })
             if (Dbcart) {

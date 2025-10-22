@@ -128,7 +128,7 @@ function Shipping() {
                             setTimeout(() => {
                                 setShowPopup(false)
                                 navigate("/")
-                            }, 500);
+                            }, 800);
                         }
                     ).catch(
                         (error) => {

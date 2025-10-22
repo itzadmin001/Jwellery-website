@@ -12,7 +12,6 @@ const CategoryModel = new mongoose.Schema({
     },
     image: {
         type: String,
-        maxLength: 100
     },
     status: {
         type: Boolean,
