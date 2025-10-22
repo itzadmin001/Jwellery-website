@@ -26,15 +26,15 @@ function ContextMain(props) {
 
 
     const categoryImages = [
-        "/images/category/SMJ004.JPEG",
+        "/images/Category/SMJ004.JPEG",
         "/images/category/SB57.JPG",
-        "/images/category/_BG70147.jpg",
-        "/images/category/_BG70285.jpg",
-        "/images/category/DSC_0175.JPG",
-        "/images/category/PSE032,.JPG",
-        "/images/category/PSJ012.JPEG",
-        "/images/category/SAE010.JPEG",
-        "/images/category/SB57.JPG"
+        "/images/Category/_BG70147.jpg",
+        "/images/Category/_BG70285.jpg",
+        "/images/Category/DSC_0175.JPG",
+        "/images/Category/PSE032,.JPG",
+        "/images/Category/PSJ012.JPEG",
+        "/images/Category/SAE010.JPEG",
+        "/images/Category/SB57.JPG"
     ]
 
 
