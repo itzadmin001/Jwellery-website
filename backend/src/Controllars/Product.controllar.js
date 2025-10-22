@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const { default: mongoose } = require("mongoose");
 const Product = require("../Models/Product.model");
-const { XlsxTojson } = require("../Utils/Xlsx");
+const { XlsxTojson } = require("../Utils/xlsx");
 
 
 function isValidUrl(url) {
