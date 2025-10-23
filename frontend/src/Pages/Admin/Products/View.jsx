@@ -419,9 +419,7 @@ function View() {
                                                             <button onClick={() => { setModalMode('edit'); openModalWithId(p._id); }} className="w-full flex cursor-pointer items-center gap-2 text-left px-4 py-2 hover:bg-gray-50">
                                                                 <span><FaEdit /></span>
                                                                 Edit</button>
-                                                            <button onClick={() => { /* duplicate placeholder */ }} className="w-full flex cursor-pointer items-center gap-2 text-left px-4 py-2 hover:bg-gray-50">
-                                                                <span><FaRegCopy /></span>
-                                                                Duplicate</button>
+
                                                             <button onClick={() => removeProduct(p._id)} className="w-full flex cursor-pointer items-center gap-2 text-left px-4 py-2 text-red-600 hover:bg-gray-50">
                                                                 <span><MdDelete /></span>
                                                                 Delete</button>
