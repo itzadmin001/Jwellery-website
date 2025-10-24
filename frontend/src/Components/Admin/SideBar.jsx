@@ -32,7 +32,7 @@ function SideBar() {
             url: "/admin/product",
         },
         {
-            name: "Transions",
+            name: "All Transactions",
             icon: < RiSecurePaymentLine />,
             url: "/admin/transactions",
 
