@@ -13,6 +13,8 @@ const razorpay = new Razorpay({
 });
 
 async function CreatePayment(req, res) {
+
+
     try {
         const { user_details, order_total, paymentMethod, product_detail, form } = req.body;
 
@@ -61,7 +63,6 @@ async function CreatePayment(req, res) {
             });
 
             // use defined amount variable (fix: previously 'amount' was undefined)
-            const amount = orderOptions.order_total;
 
             // Create payment record
             const payment = await PaymentModel.create({
@@ -69,7 +70,7 @@ async function CreatePayment(req, res) {
                 order: order._id,
                 razorpay_order_id: razorpayOrder.id,
                 amount: {
-                    amount: amount,
+                    amount: order_total,
                     currency: "INR"
                 },
                 status: 'pending'
