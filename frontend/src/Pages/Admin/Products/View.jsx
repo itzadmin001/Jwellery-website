@@ -8,6 +8,7 @@ import { FaEdit } from "react-icons/fa";
 import { FaRegCopy } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { CiImport } from "react-icons/ci";
+import { FaFileCsv } from "react-icons/fa6";
 
 
 
@@ -33,6 +34,9 @@ function View() {
     const [importLoading, setImportLoading] = useState(false)
     const [importError, setImportError] = useState('')
     const importRef = useRef(null)
+    const [importFileRows, setImportFileRows] = useState(null)
+    const [importFileUrl, setImportFileUrl] = useState(null)
+    const [dragActive, setDragActive] = useState(false)
     // export modal state
     const [exportOpen, setExportOpen] = useState(false)
     const [exportSelected, setExportSelected] = useState(new Set())
@@ -104,6 +108,46 @@ function View() {
             setImportError('Please select a file to import')
             return
         }
+
+        // helper to read CSV header & rows count
+        const readCsvHeaderAndCount = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const text = String(e.target.result || '')
+                const lines = text.split(/\r\n|\n/)
+                // remove empty trailing lines
+                const filtered = lines.filter(l => l.trim() !== '')
+                const headerLine = filtered[0] || ''
+                const headers = headerLine.split(',').map(h => h.replace(/\"/g, '').trim().toLowerCase())
+                const rows = Math.max(0, filtered.length - 1)
+                resolve({ headers, rows })
+            }
+            reader.onerror = () => reject(new Error('Failed to read CSV file'))
+            reader.readAsText(file)
+        })
+
+        // If CSV, validate header and row count client-side
+        const name = importFile.name.toLowerCase()
+        if (name.endsWith('.csv')) {
+            try {
+                const { headers, rows } = await readCsvHeaderAndCount(importFile)
+                setImportFileRows(rows)
+                const required = ['name', 'price', 'originalprice', 'category', 'sku', 'image']
+                const missing = required.filter(r => !headers.includes(r))
+                if (missing.length) {
+                    setImportError('Missing required columns: ' + missing.join(', '))
+                    return
+                }
+                if (rows > 1000) {
+                    setImportError('CSV has more than 1000 product rows. Please upload a file with at most 1000 products.')
+                    return
+                }
+            } catch (err) {
+                setImportError(err.message || 'Failed to validate CSV')
+                return
+            }
+        }
+
         const fd = new FormData()
         fd.append('excel', importFile)
         try {
@@ -114,14 +158,84 @@ function View() {
             getProduct()
             setImportOpen(false)
             setImportFile(null)
+            if (importFileUrl) {
+                URL.revokeObjectURL(importFileUrl)
+                setImportFileUrl(null)
+            }
+            setImportFileRows(null)
         } catch (err) {
             console.log('Import failed', err)
-            const msg = err?.response?.data?.message || err.message || 'Upload failed'
+            const msg = err?.response?.data?.message + " " + "Reason: " + (err.response?.data?.data[0].errors || err.message || 'Upload failed')
             setImportError(msg)
         } finally {
             setImportLoading(false)
         }
     }
+
+    // Helpers for file selection, drag/drop and preview download
+    const handleFileSelect = (file) => {
+        setImportError('')
+        if (!file) {
+            setImportFile(null)
+            setImportFileRows(null)
+            if (importFileUrl) { URL.revokeObjectURL(importFileUrl); setImportFileUrl(null) }
+            return
+        }
+        // accept only known extensions
+        const name = file.name.toLowerCase()
+        if (!name.endsWith('.csv') && !name.endsWith('.xlsx') && !name.endsWith('.xls')) {
+            setImportError('Unsupported file type. Use .csv, .xlsx or .xls')
+            return
+        }
+        // create preview URL
+        if (importFileUrl) { URL.revokeObjectURL(importFileUrl) }
+        const url = URL.createObjectURL(file)
+        setImportFileUrl(url)
+        setImportFile(file)
+        // if CSV, read rows count quickly for preview
+        if (name.endsWith('.csv')) {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const text = String(e.target.result || '')
+                const lines = text.split(/\r\n|\n/).filter(l => l.trim() !== '')
+                const rows = Math.max(0, lines.length - 1)
+                setImportFileRows(rows)
+                if (rows > 1000) setImportError('CSV has more than 1000 product rows. Server will reject >1000.')
+            }
+            reader.readAsText(file)
+        } else {
+            setImportFileRows(null)
+        }
+    }
+
+    const handleRemoveFile = () => {
+        setImportFile(null)
+        setImportFileRows(null)
+        setImportError('')
+        if (importFileUrl) {
+            URL.revokeObjectURL(importFileUrl)
+            setImportFileUrl(null)
+        }
+    }
+
+    const handleFileDownload = () => {
+        if (!importFile || !importFileUrl) return
+        const a = document.createElement('a')
+        a.href = importFileUrl
+        a.download = importFile.name
+        document.body.appendChild(a)
+        a.click()
+        a.remove()
+    }
+
+    const onDrop = (e) => {
+        e.preventDefault(); e.stopPropagation(); setDragActive(false)
+        const f = e.dataTransfer?.files?.[0]
+        if (f) handleFileSelect(f)
+    }
+
+    const onDragOver = (e) => { e.preventDefault(); e.stopPropagation(); setDragActive(true) }
+    const onDragLeave = (e) => { e.preventDefault(); e.stopPropagation(); setDragActive(false) }
 
     // Export selected products to CSV and trigger download
     const downloadCSV = (rows, filename = 'products_export.csv') => {
@@ -327,17 +441,47 @@ function View() {
 
                             {/* Popover */}
                             {importOpen && (
-                                <div className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-sm border z-50 p-3">
-                                    <div className="text-sm font-medium mb-2">Import products (Excel / CSV)</div>
-                                    <input
-                                        type="file"
-                                        accept=".csv,.xlsx,.xls"
-                                        onChange={(e) => setImportFile(e.target.files?.[0] ?? null)}
-                                        className="w-full  cursor-pointer hover:bg-gray-100 transition px-2 py-1 border rounded "
-                                    />
+                                <div className="absolute right-0 mt-2 w-96 bg-white rounded-md shadow-sm border z-50 p-4" onDrop={onDrop} onDragOver={onDragOver} onDragLeave={onDragLeave}>
+                                    <div className="text-sm font-medium mb-3">Import products (Excel / CSV)</div>
+                                    <div className={`w-full rounded border-2 ${dragActive ? 'border-blue-400 bg-blue-50' : 'border-dashed border-gray-300 bg-gray-50'} p-6 flex flex-col items-center justify-center text-center cursor-pointer`} onClick={() => document.getElementById('import-file-input')?.click()}>
+                                        <div className="text-lg font-semibold mb-2">Click here or drag file to upload</div>
+                                        <div className="text-sm text-gray-500 mb-3">Accepts .csv, .xlsx, .xls — max 1000 products (CSV validated client-side)</div>
+                                        <input id="import-file-input" type="file" accept=".csv,.xlsx,.xls" onChange={(e) => handleFileSelect(e.target.files?.[0] ?? null)} className="hidden" />
+                                        <div className="text-sm text-gray-600 mt-2">Required columns: <span className="font-semibold">name, price, originalPrice, category, sku, image</span></div>
+                                    </div>
+
+                                    <div className="mt-3 text-xs text-gray-600"> You can import up to 1,000 products at a time.</div>
+
+                                    {importFile ? (
+                                        <div className="mt-3 border rounded p-2 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                                {/* file type badge */}
+                                                {
+                                                    (importFile.name || '').toLowerCase().endsWith('.csv') ? (
+                                                        <div className="w-10 h-10 rounded-md overflow-hidden border flex-shrink-0 flex items-center justify-center bg-yellow-100 text-xs font-semibold text-yellow-800">CSV</div>
+                                                    ) : (importFile.name || '').toLowerCase().endsWith('.xlsx') || (importFile.name || '').toLowerCase().endsWith('.xls') ? (
+                                                        <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 flex items-center justify-center text-xs font-semibold text-green-800"><FaFileCsv size={24} /></div>
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded-md overflow-hidden border flex-shrink-0 flex items-center justify-center bg-gray-100 text-xs font-semibold text-gray-700">FILE</div>
+                                                    )
+                                                }
+                                                <div className="text-sm">
+                                                    <div className="font-medium">{importFile.name}</div>
+                                                    <div className="text-xs text-gray-500">{importFileRows !== null ? `${importFileRows} rows` : `${(importFile.size / 1024).toFixed(1)} KB`}</div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <button onClick={handleFileDownload} className="px-3 py-1 border rounded text-sm cursor-pointer">Download</button>
+                                                <button onClick={handleRemoveFile} className="px-3 py-1 border rounded text-sm cursor-pointer">Remove</button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="mt-3 text-sm text-gray-500">No file selected</div>
+                                    )}
+
                                     {importError && <div className="text-sm text-red-600 mt-2">{importError}</div>}
-                                    <div className="mt-3 flex justify-end gap-2">
-                                        <button onClick={() => { setImportOpen(false); setImportFile(null); setImportError('') }} className="px-3 cursor-pointer  py-1 border rounded">Cancel</button>
+                                    <div className="mt-4 flex justify-end gap-2">
+                                        <button onClick={() => { setImportOpen(false); handleRemoveFile(); setImportError('') }} className="px-3 cursor-pointer  py-1 border rounded">Cancel</button>
                                         <button onClick={handleImportSubmit} disabled={importLoading} className="px-3 py-1 bg-black text-white cursor-pointer rounded disabled:opacity-50">{importLoading ? 'Uploading...' : 'Submit'}</button>
                                     </div>
                                 </div>
