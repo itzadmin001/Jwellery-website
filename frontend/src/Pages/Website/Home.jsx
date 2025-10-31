@@ -1,14 +1,13 @@
+import { lazy, Suspense, memo } from "react";
+
 import Container from "../../Components/Website/Container"
 import BunnerImage from "../../../public/Images/Bunner.jpg"
-import Product3 from "../../../public/Images/_BG70137.jpg"
-import ProductCard from "../../Components/Website/ProductCard"
-import LOGO from "../../../public/LOGO.png"
+const ProductCard = lazy(() => import("../../Components/Website/ProductCard"));
 
 // categroy product 
 import { Link } from "react-router-dom"
 
-import CategoryProduct from "../../Components/Website/CategoryProduct"
-import MeenaKariJhumki from "../../assets/Images/Minakari-Jhumki.JPEG"
+const CategoryProduct = lazy(() => import("../../Components/Website/CategoryProduct"));
 
 
 
@@ -30,14 +29,18 @@ function Home() {
 
 
     useEffect(() => {
-        fetchProduct({ limit: 20 })
-            .then((success) => {
-                SetProductdata(success.data)
-            }).catch((err) => {
-                console.log(err)
-            })
-
-    }, [])
+        const cached = localStorage.getItem("productData");
+        if (cached) {
+            SetProductdata(JSON.parse(cached));
+        } else {
+            fetchProduct({ limit: 20 })
+                .then((res) => {
+                    SetProductdata(res.data);
+                    localStorage.setItem("productData", JSON.stringify(res.data));
+                })
+                .catch(console.log);
+        }
+    }, []);
 
 
     return (
@@ -54,16 +57,29 @@ function Home() {
 
 const Hero = () => {
     return (
-        <section className="w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] flex items-center overflow-hidden" style={{
-            backgroundImage: `url(${BunnerImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-        }}>
-            <Container classes="flex items-center  ">
-                <div className=" font-semibold w-2/3 px-3 mt-5">
-                    <h1 className="lg:text-6xl sm:pr-20 text-white md:text-5xl sm:text-4xl text-xl font-serif tracking-tight ">Flagship Store of Deen Dayal Rajkumar Jewellers</h1>
+        <section className="relative w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] overflow-hidden flex items-center">
+            <img
+                src={BunnerImage}
+                alt="Luxury jewelry background"
+                loading="eager"
+                fetchpriority="high"
+                className="absolute inset-0 w-full h-full object-cover object-center"
+                width="1920"
+                height="1080"
+            />
+            <div className="absolute inset-0 bg-black/30" /> {/* overlay */}
+            <Container classes=" relative z-10 flex lg:ml-10">
+                <div className="font-semibold w-2/3 mt-5 text-white ">
+                    <h1 className="lg:text-6xl md:text-5xl sm:text-4xl text-xl font-serif tracking-tight ">
+                        Flagship Store of Deen Dayal Rajkumar Jewellers
+                    </h1>
                     <div className="mt-5">
-                        <Link to={"/store"} className=" bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer">Shop Now</Link>
+                        <Link
+                            to="/store"
+                            className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 sm:px-6 px-4 py-2 rounded-md text-white"
+                        >
+                            Shop Now
+                        </Link>
                     </div>
                 </div>
             </Container>
@@ -73,8 +89,7 @@ const Hero = () => {
 }
 
 
-const CategoryDisplay = ({ Category }) => {
-
+const CategoryDisplay = memo(({ Category }) => {
 
 
 
@@ -93,18 +108,22 @@ const CategoryDisplay = ({ Category }) => {
                     </div>
                     <div className=" flex items-center gap-3 justify-center mt-10 overflow-x-auto scroll">
                         {/* product category */}
-                        {Category.map((item, index) => (
-                            <CategoryProduct key={item._id} data={item} index={index} />
-                        ))}
+                        <Suspense fallback={<div className="text-center p-10">Loading...</div>}>
+                            {Category.map((item, index) => (
+                                <CategoryProduct key={item._id} data={item} index={index} />
+                            ))}
+                        </Suspense>
+
                     </div>
                 </div>
             </Container>
             <div className="mt-20 flex justify-center">
                 <div className=" bg-black grid md:grid-cols-3 overflow-hidden w-full ">
                     <img
-                        src="https://images.pexels.com/photos/1395306/pexels-photo-1395306.jpeg "
+                        src="https://images.pexels.com/photos/1395306/pexels-photo-1395306.jpeg?auto=compress&cs=tinysrgb&w=800"
                         alt="Exquisite Jewelry Collection"
-                        className=" object-cover object-center w-full h-full"
+                        loading="lazy"
+                        className="object-cover object-center w-full h-full"
                     />
 
                     <div className="md:col-span-2 flex flex-col justify-center p-8 text-white space-y-3">
@@ -129,10 +148,10 @@ const CategoryDisplay = ({ Category }) => {
             </div>
         </section>
     )
-}
+})
 
 
-const FeaturedCategory = ({ Productdata }) => {
+const FeaturedCategory = memo(({ Productdata }) => {
 
 
 
@@ -159,7 +178,7 @@ const FeaturedCategory = ({ Productdata }) => {
             </Container>
         </section>
     )
-}
+})
 
 
 

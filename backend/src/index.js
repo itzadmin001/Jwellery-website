@@ -24,6 +24,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use(express.static("public", { maxAge: "1y", etag: false }));
 
 // User Api Routes
 app.use("/auth", userRouter);
