@@ -56,7 +56,6 @@ async function XlsxTojson(req, res) {
                 // auto-create category to avoid import failure
                 try {
                     cat = await Category.create({ name: String(categoryRaw).trim(), slug: catSlug });
-                    console.debug('Created category:', cat && cat._id ? `${cat.name} (${cat._id})` : cat);
                 } catch (createErr) {
 
                     console.error('Failed to create category for', categoryRaw, createErr);
@@ -94,7 +93,6 @@ async function XlsxTojson(req, res) {
                 const exist = await Product.findOne({ sku: prepared.sku });
                 if (exist) { errorData.push({ row: rowNum, errors: ['sku_exists'], data: prepared }); continue }
                 const created = await Product.create(prepared);
-                console.log('Product created:', created);
                 successData.push({ row: rowNum, data: created });
             } catch (e) { errorData.push({ row: rowNum, errors: ['db', e.message || String(e)], data: prepared }) }
         }
