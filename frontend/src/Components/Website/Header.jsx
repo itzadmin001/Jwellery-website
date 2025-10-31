@@ -196,6 +196,7 @@ export default function Header() {
 
                                 {/* Search Button */}
                                 <button
+                                    aria-label="Search"
                                     onClick={() => SetSearchOpen(!SearchOpen)}
                                     className="hidden md:inline-flex cursor-pointer duration-300 items-center p-2 rounded hover:bg-gray-100"
                                 >
@@ -252,6 +253,7 @@ export default function Header() {
                             </button>
                             <div className="relative hidden md:inline-flex">
                                 <button
+                                    aria-label="user"
                                     onClick={handleClick}
                                     onMouseEnter={() => user && setUserMenuOpen(true)}
                                     onMouseLeave={() => user && setUserMenuOpen(false)}

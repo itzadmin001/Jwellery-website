@@ -67,6 +67,7 @@ const Hero = () => {
                 width="1920"
                 height="1080"
             />
+
             <div className="absolute inset-0 bg-black/30" /> {/* overlay */}
             <Container classes=" relative z-10 flex lg:ml-10">
                 <div className="font-semibold w-2/3 mt-5 text-white ">
