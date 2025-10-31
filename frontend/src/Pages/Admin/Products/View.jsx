@@ -357,38 +357,40 @@ function View() {
     }
 
     const saveModalProduct = async (form) => {
+        console.log('Save modal product', form)
         if (!modalProductId) return;
-        const formData = new FormData();
-        formData.append('name', form.name || '')
-        formData.append('slug', form.slug || '')
-        formData.append('price', form.price?.toString() || '')
-        formData.append('originalPrice', form.originalPrice?.toString() || '')
-        formData.append('description', form.description || '')
-        formData.append('category', form.category || '')
-        formData.append('sku', form.sku || '')
-        formData.append('stockQuantity', form.stockQuantity?.toString() || '')
-        formData.append('status', form.status ? 'true' : 'false')
-        formData.append('stock', form.stock ? 'true' : 'false')
-        formData.append('featured', form.featured ? 'true' : 'false')
-        formData.append('metaTitle', form.metaTitle || '')
-        formData.append('metaDescription', form.metaDescription || '')
-
-        // arrays
-        if (form.tags) formData.append('tags', JSON.stringify(form.tags))
-        if (form.features) formData.append('features', JSON.stringify(form.features))
-        if (form.existingRelated) formData.append('existingRelated', JSON.stringify(form.existingRelated))
-
-        if (form.mainImage && form.mainImage instanceof File) {
-            formData.append('image', form.mainImage)
-        }
-        if (Array.isArray(form.relatedFiles) && form.relatedFiles.length > 0) {
-            form.relatedFiles.forEach(f => formData.append('relatedImage', f))
+        // Backend now expects JSON with image URLs (no multipart/form-data).
+        // Build a plain object payload where `image` is a single URL string
+        // and `relatedImage` is an array of URL strings. Keep other fields
+        // in simple JSON types (booleans, numbers, strings, arrays).
+        const payload = {
+            name: form.name,
+            slug: form.slug,
+            price: form.price === '' ? 0 : Number(form.price),
+            originalPrice: form.originalPrice === '' ? 0 : Number(form.originalPrice),
+            description: form.description,
+            category: form.category,
+            sku: form.sku,
+            stockQuantity: form.stockQuantity === '' ? 0 : Number(form.stockQuantity),
+            status: !!form.status,
+            stock: !!form.stock,
+            featured: !!form.featured,
+            metaTitle: form.metaTitle,
+            metaDescription: form.metaDescription,
+            tags: Array.isArray(form.tags) ? form.tags : (form.tags ? [form.tags] : []),
+            features: Array.isArray(form.features) ? form.features : (form.features ? [form.features] : []),
+            // image and related images as URLs (strings)
+            image: form.mainImage || null,
+            // send existingRelated if provided so backend can decide how to merge
+            relatedImage: Array.isArray(form.relatedFiles) ? form.relatedFiles.slice() : (form.relatedFiles ? [form.relatedFiles] : []),
         }
 
         try {
-            await axios.put(`${BACKEND_URL}${ProductBaseUrl}/update/${modalProductId}`, formData, { withCredentials: true })
+            const res = await axios.put(`${BACKEND_URL}${ProductBaseUrl}/update/${modalProductId}`, payload, { withCredentials: true })
             // refresh list and close
+            console.log('Save success', res)
             getProduct()
+
             closeModal()
         } catch (err) {
             console.log('Save failed', err)
@@ -733,13 +735,12 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
     const [form, setForm] = useState({
         name: product.name || '',
         slug: product.slug || '',
-        price: product.price || 0,
-        originalPrice: product.originalPrice || product.price || 0,
+        price: product.price ?? 0,
+        originalPrice: product.originalPrice ?? product.price ?? 0,
         description: product.description || '',
         category: product.category?._id || product.category || '',
-        // subcategory removed per request
         sku: product.sku || '',
-        stockQuantity: product.stockQuantity || product.stock || 0,
+        stockQuantity: product.stockQuantity ?? product.stock ?? 0,
         featured: !!product.featured,
         status: !!product.status,
         stock: !!product.stock,
@@ -747,11 +748,14 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
         metaTitle: product.metaTitle || '',
         metaDescription: product.metaDescription || '',
         features: Array.isArray(product.features) ? product.features.slice() : [],
-        mainImage: null,
+        // image URL string
+        mainImage: product.image || '',
+        // related image URLs added in this edit session
         relatedFiles: []
     })
 
     const [existingRelated, setExistingRelated] = useState(Array.isArray(product.relatedImage) ? product.relatedImage.slice() : [])
+    const [newRelatedUrl, setNewRelatedUrl] = useState('')
 
     const handle = (e) => {
         const { name, value, type, checked } = e.target
@@ -759,18 +763,15 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
         setForm(s => ({ ...s, [name]: value }))
     }
 
-    const handleMainImage = (e) => {
-        const f = e.target.files?.[0]
-        if (f) setForm(s => ({ ...s, mainImage: f }))
-    }
-
-    const handleRelated = (e) => {
-        const files = Array.from(e.target.files || [])
-        if (files.length) setForm(s => ({ ...s, relatedFiles: [...s.relatedFiles, ...files] }))
-    }
-
     const removeExistingRelated = (i) => {
         setExistingRelated(arr => arr.filter((_, idx) => idx !== i))
+    }
+
+    const addRelatedUrl = () => {
+        const url = (newRelatedUrl || '').trim()
+        if (!url) return
+        setForm(s => ({ ...s, relatedFiles: [...s.relatedFiles, url] }))
+        setNewRelatedUrl('')
     }
 
     const removeNewRelated = (i) => {
@@ -783,9 +784,9 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
     }
 
     const submit = () => {
-        const payload = { ...form, relatedFiles: form.relatedFiles, tags: form.tags }
+        const payload = { ...form, relatedFiles: form.relatedFiles.slice(), tags: form.tags }
         // include existing related images as array so backend may keep them
-        payload.existingRelated = existingRelated
+        payload.existingRelated = existingRelated.slice()
         onSave(payload)
     }
 
@@ -795,10 +796,11 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
                 <h3 className="text-lg font-semibold">Images</h3>
                 <div className="mt-2">
                     <div className="w-36 h-36 border rounded overflow-hidden">
-                        <img src={form.mainImage ? URL.createObjectURL(form.mainImage) : product.image} alt="main" className="w-full h-full object-cover" />
+                        <img src={form.mainImage || product.image} alt="main" className="w-full h-full object-cover" />
                     </div>
                     <div className="mt-2">
-                        <input type="file" accept="image/*" onChange={handleMainImage} />
+                        <label className="block text-sm">Main Image URL</label>
+                        <input name="mainImage" value={form.mainImage} onChange={handle} placeholder="https://.../image.jpg" className="mt-1 w-full border rounded px-3 py-2" />
                     </div>
                     <div className="mt-4">
                         <div className="font-medium">Existing Related</div>
@@ -806,18 +808,21 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
                             {existingRelated.map((r, i) => (
                                 <div key={i} className="relative w-16 h-16 border rounded overflow-hidden">
                                     <img src={r} alt={`r-${i}`} className="w-full h-full object-cover" />
-                                    <button onClick={() => removeExistingRelated(i)} className="absolute -top-2 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs">×</button>
+                                    <button type="button" onClick={() => removeExistingRelated(i)} className="absolute -top-2 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs">×</button>
                                 </div>
                             ))}
                         </div>
                         <div className="mt-2">
-                            <div className="font-medium">Add Related Images</div>
-                            <input type="file" accept="image/*" multiple onChange={handleRelated} />
+                            <div className="font-medium">Add Related Image URL</div>
+                            <div className="flex gap-2 mt-1">
+                                <input value={newRelatedUrl} onChange={(e) => setNewRelatedUrl(e.target.value)} placeholder="https://.../image.jpg" className="w-full border rounded px-3 py-2" />
+                                <button type="button" onClick={addRelatedUrl} className="px-3 py-2 bg-gray-800 text-white rounded">Add</button>
+                            </div>
                             <div className="flex gap-2 mt-2 flex-wrap">
                                 {form.relatedFiles.map((f, i) => (
                                     <div key={i} className="relative w-16 h-16 border rounded overflow-hidden">
-                                        <img src={URL.createObjectURL(f)} alt={f.name} className="w-full h-full object-cover" />
-                                        <button onClick={() => removeNewRelated(i)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs">×</button>
+                                        <img src={f} alt={`new-${i}`} className="w-full h-full object-cover" />
+                                        <button type="button" onClick={() => removeNewRelated(i)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs">×</button>
                                     </div>
                                 ))}
                             </div>
@@ -863,7 +868,7 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
                             <input name="stockQuantity" type="number" value={form.stockQuantity} onChange={handle} className="mt-1 w-full border rounded px-3 py-2" />
                         </div>
                         <div>
-                            <label className="block text-sm">Tags (comma)</label>
+                            <label className="block text-sm">Tags (press Enter to add)</label>
                             <input name="tagsInput" onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(e.target.value); e.target.value = '' } }} className="mt-1 w-full border rounded px-3 py-2" placeholder="Type tag and press Enter" />
                         </div>
                     </div>
@@ -872,8 +877,7 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
                         <textarea name="description" value={form.description} onChange={handle} className="mt-1 w-full border rounded px-3 py-2" rows={4} />
                     </div>
                     <div>
-                        <label className="block text-sm">Tags (comma separated)</label>
-                        <input name="tagsInput" onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(e.target.value); e.target.value = '' } }} className="mt-1 w-full border rounded px-3 py-2" placeholder="Type tag and press Enter" />
+                        <label className="block text-sm">Tags</label>
                         <div className="mt-2 flex gap-2 flex-wrap">
                             {form.tags.map((t, i) => <span key={i} className="px-2 py-1 bg-gray-100 rounded">{t}</span>)}
                         </div>
@@ -895,5 +899,7 @@ function FullEditForm({ product, onCancel, onSave, Category = [] }) {
         </div>
     )
 }
+
+
 
 export default View;

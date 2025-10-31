@@ -38,8 +38,7 @@ function ContextMain(props) {
     ]
 
 
-    const fetchProduct = async ({ limit = 0, id, category, price }) => {
-
+    const fetchProduct = async ({ limit = 20, id, category, price }) => {
         const params = {};
         if (limit) params.limit = limit;
         if (id) params.id = id;

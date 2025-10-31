@@ -413,31 +413,6 @@ async function deleteProduct(req, res) {
                 message: "Product ID is required"
             });
         }
-
-        const product = await ProductModel.findById(id);
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-
-        // Delete image from ImageKit if URL exists
-        if (product.image) {
-            try {
-                // Extract filePath from URL relative to urlEndpoint
-                const urlEndpoint = process.env.IMAGEKIT_URL_ENGPOINT;
-                const relativePath = product.image.replace(urlEndpoint, "");
-
-                // ImageKit requires fileId to delete; if fileId isn't stored, use list & delete by path
-                const list = await imagekit.listFiles({ path: relativePath.startsWith("/") ? path.posix.dirname(relativePath) : relativePath });
-                const target = list.find(f => f.url === product.image || ("/" + f.filePath) === relativePath || f.filePath === relativePath);
-                if (target && target.fileId) {
-                    await imagekit.deleteFile(target.fileId);
-                }
-            } catch (ikErr) {
-                console.error("ImageKit delete error:", ikErr);
-                // proceed to delete DB even if image deletion fails
-            }
-        }
-
         await ProductModel.findByIdAndDelete(id);
 
         return res.status(200).json({

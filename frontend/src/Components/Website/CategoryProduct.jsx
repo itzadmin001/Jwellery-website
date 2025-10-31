@@ -18,7 +18,7 @@ function CategoryProduct({ data, index }) {
 
 
     return (
-        <div className="flex flex-col items-center group cursor-pointer p-2" onClick={() => navigate(`/store/${data.name}`)}>
+        <div className="flex flex-col items-center group cursor-pointer p-2" onClick={() => navigate(`/store/${data.slug}`)}>
             {/* Image container */}
             <div className="w-24 h-24  rounded-full overflow-hidden border-4 border-[#f4c24f] shadow-sm group-hover:shadow-md transition-all duration-300">
 

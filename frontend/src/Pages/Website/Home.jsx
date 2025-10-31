@@ -23,11 +23,21 @@ import { MainContext } from "../../ContextMain"
 
 
 function Home() {
-    const { Category, Productdata } = useContext(MainContext)
+    const { Category, Productdata, fetchProduct, SetProductdata } = useContext(MainContext)
 
 
 
 
+
+    useEffect(() => {
+        fetchProduct({ limit: 20 })
+            .then((success) => {
+                SetProductdata(success.data)
+            }).catch((err) => {
+                console.log(err)
+            })
+
+    }, [])
 
 
     return (
