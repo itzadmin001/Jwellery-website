@@ -154,7 +154,9 @@ function App() {
     },
     {
       path: "*",
-      element: <h1>Page Not Found</h1>
+      element: <div>
+        <img className="w-full h-[80vh] object-contain" src="https://imgs.search.brave.com/FzbZ1eHJb_qNLwxM8tHxf9GCOsplpPFfslD1PabVWW8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdDMu/ZGVwb3NpdHBob3Rv/cy5jb20vNzkwMTYx/Mi8xNDQ2My92LzQ1/MC9kZXBvc2l0cGhv/dG9zXzE0NDYzMjc1/Ny1zdG9jay1pbGx1/c3RyYXRpb24tZXJy/b3ItNDA0LXBhZ2Ut/d2l0aC13b3JrZXJz/LmpwZw" alt="" />
+      </div>
 
     },
     {
