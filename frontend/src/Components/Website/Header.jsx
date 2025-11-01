@@ -2,7 +2,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Container from "./Container";
-import WhatsappImage from "../../../public/Images/whatsapp-icon.png"
+import WhatsappImage from "../../../public/Images/whatsapp-icon.webp"
 import { TbShoppingCartCopy } from "react-icons/tb";
 
 import {
@@ -112,7 +112,7 @@ export default function Header() {
     return (
         <header className="w-full relative">
             {/* Top Info Bar */}
-            <div className="w-full bg-[#C19B50] text-white text-xs">
+            <div className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs">
                 <div className="mx-auto px-4 sm:px-6 flex items-center justify-center h-8">
                     <div className="border-b">
                         <span>COD & FREE SHIPPING</span>
