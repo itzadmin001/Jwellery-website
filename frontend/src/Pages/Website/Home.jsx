@@ -1,7 +1,7 @@
 import { lazy, Suspense, memo } from "react";
 
 import Container from "../../Components/Website/Container"
-import BunnerImage from "../../../public/Images/Bunner.jpg"
+import BunnerImage from "../../../public/Images/Bunner.webp"
 const ProductCard = lazy(() => import("../../Components/Website/ProductCard"));
 
 // categroy product 
