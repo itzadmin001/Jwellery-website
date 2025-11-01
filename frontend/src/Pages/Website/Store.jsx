@@ -125,7 +125,7 @@ function Store() {
         <main className="bg-[#faf7f3]">
             {/* 🔸 Banner Section */}
             <section aria-label="Promotion" className="pb-4">
-                <div className="relative overflow-hidden bg-amber-200/40">
+                <div className="relative overflow-hidden">
                     <SlickSlider
                         Category={Category}
                         title="Promotion"
@@ -133,6 +133,8 @@ function Store() {
                         settings={settings}
                     />
                 </div>
+
+
             </section>
 
             {/* 🔸 Content Section */}

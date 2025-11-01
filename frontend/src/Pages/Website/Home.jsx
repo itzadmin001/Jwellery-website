@@ -57,7 +57,7 @@ function Home() {
 
 const Hero = () => {
     return (
-        <section className="relative w-full bg-[#FDFDFD] md:h-[100vh] h-[60vh] overflow-hidden flex items-center">
+        <section className="relative w-full bg-[#FDFDFD] md:h-[80vh] h-[60vh] overflow-hidden flex items-center">
             <img
                 src={BunnerImage}
                 alt="Luxury jewelry background"
