@@ -100,9 +100,7 @@ function View() {
             });
             notify(res.data.message || 'Category updated', 'success');
             fectchCategory();
-
             closeEditor();
-
         } catch (err) {
             const msg = err?.response?.data?.message || err.message || 'Update failed';
             notify(msg, 'error');
@@ -112,7 +110,6 @@ function View() {
     };
 
 
-    // Inline add category modal content
     const AddCategoryModalContent = ({ onSuccess }) => {
         const { BACKEND_URL, CategoryBaseUrl, notify } = useContext(MainContext);
         const [name, setName] = useState('');
