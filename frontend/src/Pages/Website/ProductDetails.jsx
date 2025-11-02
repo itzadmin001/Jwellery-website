@@ -71,8 +71,13 @@ function ProductDetails() {
     };
 
     const handleBuyNow = () => {
-        handleAddToCart();
-        navigate("/checkout");
+        dispatch(addToCart({
+            pId: id,
+            qty: qty,
+            price: product.price
+        }))
+        console.log(qty, "under"),
+            navigate("/checkout");
     };
 
     const suggestions = Productdata.filter((item) => item.id !== product.id).slice(0, 4);

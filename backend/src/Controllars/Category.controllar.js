@@ -1,4 +1,5 @@
 const CategoryModel = require("../Models/Category.model");
+const ProductModel = require("../Models/Product.model");
 const ImageKit = require("imagekit");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
@@ -7,11 +8,11 @@ const path = require("path");
 // Create a new category
 async function createCategory(req, res) {
     try {
-        const { name, slug, image } = req.body;
+        const { name, slug } = req.body;
 
-        if (!name || !slug || !image) {
+        if (!name || !slug) {
             return res.status(400).json({
-                message: "Name image and slug are required fields"
+                message: "Name and slug are required fields"
             });
         }
 
@@ -25,7 +26,6 @@ async function createCategory(req, res) {
         const created = await CategoryModel.create({
             name,
             slug,
-            image
         });
 
         return res.status(201).json({
@@ -84,7 +84,7 @@ async function getCategories(req, res) {
 async function updateCategory(req, res) {
     try {
         const { id } = req.params;
-        const { name, slug, image } = req.body;
+        const { name, slug } = req.body;
 
         // Validate ID
         if (!id) {
@@ -106,7 +106,6 @@ async function updateCategory(req, res) {
 
         // Update other fields only if provided
         if (name !== undefined) updateData.name = name;
-        if (image !== undefined) updateData.image = image;
         if (slug !== undefined) {
             const slugExists = await CategoryModel.findOne({
                 slug,
@@ -201,7 +200,17 @@ async function deleteCategory(req, res) {
             });
         }
 
+
+        const FindProductWithCategory = await ProductModel.findOne({ category: category._id });
+
+        if (FindProductWithCategory) {
+            return res.status(400).json({
+                message: "Cannot delete category linked to products"
+            });
+        }
+
         // Delete category from database
+
         await CategoryModel.findByIdAndDelete(id);
 
         return res.status(200).json({

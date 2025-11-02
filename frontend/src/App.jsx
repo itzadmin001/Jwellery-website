@@ -31,6 +31,7 @@ import ProductView from "./Pages/Admin/Products/View"
 import ProductAdd from "./Pages/Admin/Products/Add"
 
 
+import CategoryView from "./Pages/Admin/Category/View"
 
 import { WishlistToState } from "./Reducers/WishList"
 import MyOrders from "./Pages/Website/MyOrders"
@@ -141,6 +142,10 @@ function App() {
         {
           path: "product",
           element: <ProductView />
+        },
+        {
+          path: "category",
+          element: <CategoryView />
         },
         {
           path: "product/add",

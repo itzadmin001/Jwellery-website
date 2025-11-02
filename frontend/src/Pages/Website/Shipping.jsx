@@ -19,6 +19,7 @@ function Shipping() {
 
 
 
+    console.log(cart)
 
     useEffect(() => {
         if (!user) {
@@ -50,6 +51,10 @@ function Shipping() {
 
 
     const handleOrder = (e) => {
+        if (cart.data.length === 0) {
+            alert("Your cart is empty");
+            return;
+        }
         Setloading(true)
         e.preventDefault();
         const product_detail = []

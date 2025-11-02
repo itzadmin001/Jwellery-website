@@ -128,28 +128,18 @@ async function createProduct(req, res) {
 }
 
 async function addProductExcel(req, res) {
-
     try {
-
-        const data = await XlsxTojson(req, res)
-
-        if (data.successData.length > 0) {
-            return res.status(200).json({
-                message: "Product added from excel",
-                data: data
-            })
-        }
-        else {
-            return res.status(400).json({
-                message: "No product added from excel",
-                data: data.errorData
-            })
-        }
+        // XlsxTojson khud response send kar dega, yaha return ki zarurat nahi
+        await XlsxTojson(req, res);
     } catch (err) {
-        console.log(err)
-        res.status(500).json({
-            message: "internal server error"
-        })
+        console.error('Excel import error:', err);
+        // Agar response already send nahi hua toh error send karo
+        if (!res.headersSent) {
+            return res.status(500).json({
+                message: "Internal server error",
+                error: err.message
+            });
+        }
     }
 }
 

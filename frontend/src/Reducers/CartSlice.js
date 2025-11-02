@@ -15,12 +15,12 @@ export const CartSlice = createSlice({
             if (!Founditem) {
                 currentState.data.push({
                     pId: payload.pId,
-                    qty: 1,
+                    qty: payload.qty || 1,
                 });
             } else {
                 Founditem.qty++;
             }
-            currentState.total = Number(Math.round(currentState.total + payload.price));
+            currentState.total = Number(Math.round(currentState.total + payload.price * (payload.qty || 1)));
 
 
             localStorage.setItem("cart", JSON.stringify(currentState));

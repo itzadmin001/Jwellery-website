@@ -15,7 +15,7 @@ import { FaFileCsv } from "react-icons/fa6";
 
 function View() {
 
-    const { fetchProduct, BACKEND_URL, ProductBaseUrl, Category } = useContext(MainContext)
+    const { BACKEND_URL, ProductBaseUrl, Category } = useContext(MainContext)
     const [Products, SetProduct] = useState([])
     const [limit, Setlimit] = useState(20);
     const [query, setQuery] = useState("");
@@ -48,9 +48,9 @@ function View() {
 
 
     const getProduct = () => {
-        fetchProduct({ limit })
+        axios.get(`${BACKEND_URL}${ProductBaseUrl}/get-all`, { withCredentials: true })
             .then((success) => {
-                SetProduct(success.data)
+                SetProduct(success.data.FindAllProduct)
             }).catch((err) => {
                 console.log(err)
             })
@@ -60,7 +60,7 @@ function View() {
 
     useEffect(() => {
         getProduct()
-    }, [limit])
+    }, [])
 
     useEffect(() => {
         if (filterCategory == "ALL") {
@@ -154,7 +154,6 @@ function View() {
             setImportLoading(true)
             const res = await axios.post(`${BACKEND_URL}${ProductBaseUrl}/add-product-excel`, fd, { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } })
             // assume success -> refresh list and close
-            console.log('Import success', res)
             getProduct()
             setImportOpen(false)
             setImportFile(null)
@@ -452,7 +451,7 @@ function View() {
                                         <div className="text-sm text-gray-600 mt-2">Required columns: <span className="font-semibold">name, price, originalPrice, category, sku, image</span></div>
                                     </div>
 
-                                    <div className="mt-3 text-xs text-gray-600"> You can import up to 1,000 products at a time.</div>
+                                    <div className="mt-3 text-xs text-gray-600"> You can import up to 500 products at a time.</div>
 
                                     {importFile ? (
                                         <div className="mt-3 border rounded p-2 flex items-center justify-between">
@@ -498,7 +497,7 @@ function View() {
                 <div className="bg-white rounded-lg shadow overflow-hidden" ref={actionRef}>
                     <div className="p-4 border-b flex items-center justify-between">
                         <div className="text-sm text-gray-600">Showing {Products.length} products</div>
-                        <div className="text-sm text-gray-500">Load: {limit}</div>
+
                     </div>
 
                     <div className="mb-20">
@@ -549,9 +548,9 @@ function View() {
                                             </td>
                                             <td className="px-4 py-4">
                                                 {p.featured ? (
-                                                    <button onClick={() => toggleBoolean(p._id, "featured", false)} className="inline-block cursor-pointer px-3 py-1 text-xs font-semibold bg-black rounded-full text-white">Yes</button>
+                                                    <button onClick={() => toggleBoolean(p._id, "featured", false)} className="inline-block cursor-pointer px-3 py-1 text-xs font-semibold bg-blue-600 rounded-full text-white">Yes</button>
                                                 ) : (
-                                                    <button onClick={() => toggleBoolean(p._id, "featured", true)} className="inline-block cursor-pointer px-3 py-1 text-xs font-semibold bg-black rounded-full text-white">No</button>
+                                                    <button onClick={() => toggleBoolean(p._id, "featured", true)} className="inline-block cursor-pointer px-3 py-1 text-xs font-semibold bg-black rounded-full hover:bg-red-500 text-white">No</button>
                                                 )}
                                             </td>
                                             <td className="px-2 py-4 text-center">

@@ -300,7 +300,7 @@ function Store() {
                         )}
 
                         <div className="mt-5 text-center">
-                            <button
+                            <button onClick={() => Setlimit(limit + 20)}
                                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 sm:px-6 px-4 py-2 rounded-md text-white cursor-pointer"
                             >
                                 Load More

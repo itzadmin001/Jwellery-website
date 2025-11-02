@@ -32,6 +32,11 @@ function SideBar() {
             url: "/admin/product",
         },
         {
+            name: "Category",
+            icon: <BiSolidCategoryAlt />,
+            url: "/admin/category",
+        },
+        {
             name: "All Transactions",
             icon: < RiSecurePaymentLine />,
             url: "/admin/transactions",
