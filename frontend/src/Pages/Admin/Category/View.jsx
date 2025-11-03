@@ -25,6 +25,7 @@ function View() {
             path: "/admin/category/view"
         },
         {
+
             name: "View",
             path: "/admin/category/View"
         }
