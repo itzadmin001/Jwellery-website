@@ -356,7 +356,6 @@ function View() {
     }
 
     const saveModalProduct = async (form) => {
-        console.log('Save modal product', form)
         if (!modalProductId) return;
         // Backend now expects JSON with image URLs (no multipart/form-data).
         // Build a plain object payload where `image` is a single URL string
