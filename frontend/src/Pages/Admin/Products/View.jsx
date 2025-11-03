@@ -386,8 +386,7 @@ function View() {
 
         try {
             const res = await axios.put(`${BACKEND_URL}${ProductBaseUrl}/update/${modalProductId}`, payload, { withCredentials: true })
-            // refresh list and close
-            console.log('Save success', res)
+
             getProduct()
 
             closeModal()
