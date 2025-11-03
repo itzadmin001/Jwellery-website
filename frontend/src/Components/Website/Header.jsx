@@ -134,7 +134,7 @@ export default function Header() {
                     rel="noopener noreferrer"
                     className="  shadow-lg hover:scale-110 transition-transform duration-300"
                 >
-                    <img src={WhatsappImage} alt="WhatsApp" className="w-15" />
+                    <img src={WhatsappImage} alt="WhatsApp" className="w-12" />
                 </a>
             </div>
             {/* Logo */}
